@@ -72,7 +72,15 @@ def simlar_based_active_domain(dataset,row,col):
     return dataset
 
 
-
+def noise(dataset,row,col):
+    """
+    this method add the noise to one active domain
+    """
+    # for now we add
+    mu, sigma = 0, 0.1 # mean and standard deviation
+    noise = np.random.normal(mu, sigma, 1)
+    dataset[row][col]=float(dataset[row][col])+noise[0]
+    return dataset
 
 if __name__=="__main__":
     x=read_csv_dataset("/home/milad/Desktop/DFKI/abstraction-layer/BART/TypoGenerator/test.csv")
@@ -82,5 +90,4 @@ if __name__=="__main__":
     #print(explicit_missing_value(x,1,2))
     #print(random_active_domain(x,1,2))
     #print(simlar_based_active_domain(x,1,2))
-    noise = np.random.normal(0, 1, 1)
-    print(noise)
+    print(noise(x,1,2))
