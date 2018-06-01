@@ -126,7 +126,15 @@ def Denial_constraint(dataset,rules,percentage):
     pair = []
     sub=[]
     obj=[]
-    number = int((percentage / 100) * (len(dataset) - 1))
+    candidate_for_change=[]
+    candidate_for_change_dic = {}
+    history=[]
+    temp=[]
+    dic={}
+    new_dic = {}
+    new_dic_values = {}
+
+
 
 
     # devide the rule to sub and obj
@@ -138,36 +146,65 @@ def Denial_constraint(dataset,rules,percentage):
     #find the index of sub and obj
 
     for n in range(len(sub)):
-        indices_sub.append(x[0].index(sub[n]))
-        indices_obj.append(x[0].index(obj[n]))
+        indices_sub.append(dataset[0].index(sub[n]))
+        indices_obj.append(dataset[0].index(obj[n]))
         pair.append((indices_sub[n], indices_obj[n])) #indeces of the col
 
-    # to understand how many rule we should violate from each rule
-    choise_from_each_rule=int(number/len(indices_sub))
+    if type(percentage)!= list:
+        print("percentage is a int")
+        number = int((percentage / 100) * (len(dataset) - 1))
+        # to understand how many rule we should violate from each rule
+        choise_from_each_rule=int(number/len(indices_sub))
 
-    #print(choise_from_each_rule)
-    print(pair)
-    candidate_for_change=[]
-    history=[]
-    dic={}
-
-
-    for i in range(len(indices_sub)):
-        number_choice = np.random.randint(1, len(x), choise_from_each_rule)
-        dic[indices_sub[i]] = number_choice #for each rule we save the row number
-        #print(number_choice)
-        for j in range(choise_from_each_rule):
+        #print(choise_from_each_rule)
+        print(pair)
 
 
-            candidate_for_change.append(x[number_choice[j]][indices_sub[i]])
 
-    print(dic)
+        for i in range(len(indices_sub)): #number of the function that we have
+            number_choice = np.random.randint(1, len(dataset), choise_from_each_rule)
+            dic[indices_sub[i]] = number_choice #for each rule we save the row number
+            #print(number_choice)
+            temp=[]
+            for j in range(choise_from_each_rule):
+                candidate_for_change.append(dataset[number_choice[j]][indices_sub[i]])
+                temp.append(dataset[number_choice[j]][indices_sub[i]])
+                candidate_for_change_dic[indices_sub[i]] = temp
+
+        print(dic)
+
+
+
+    else:
+        print("percentage is a list")
+
+        for i in range(len(indices_sub)):  # number of the function dependency that we have
+            number_choice = np.random.randint(1, len(dataset), (int((percentage[i] / 100) * (len(dataset) - 1))))
+            dic[indices_sub[i]] = number_choice  # for each rule we save the row number
+
+            # print(number_choice)
+            temp=[]
+            for j in range(int((percentage[i] / 100) * (len(dataset) - 1))):
+
+                candidate_for_change.append(dataset[number_choice[j]][indices_sub[i]])
+                temp.append(dataset[number_choice[j]][indices_sub[i]])
+                candidate_for_change_dic[indices_sub[i]]=temp
+
+
+        print(dic)
+
+
     #check for duplicate
 
-    new_dic={}
+
     for key, values in dic.items():
         new_dic[key] = remove_duplicates(values)
-    #print(candidate_for_change)
+
+    print(candidate_for_change)
+    print(candidate_for_change_dic)
+
+    for key, values in candidate_for_change_dic.items():
+        new_dic_values[key] = remove_duplicates(values)
 
     #print(ready_for_change)
     for key, value in new_dic.items():
@@ -176,6 +213,19 @@ def Denial_constraint(dataset,rules,percentage):
 
     print(history)
     print(new_dic)
+    print(new_dic_values)
+
+
+    for i in range(len(new_dic.keys())):
+        for j in range(len(new_dic.values())):
+
+            temp_rand=random.randint(1, len(dataset) - 1)
+            while temp_rand in new_dic.values():
+                print("duplicated")
+                temp_rand = random.randint(1, len(dataset) - 1)
+            # print("this value"+dataset[new_dic.values[j]][new_dic.keys[i]]+"changed to "+dataset[temp_rand][new_dic.keys[i]])
+            # dataset[new_dic[i][j]][new_dic.keys[i]]=dataset[temp_rand][new_dic.keys[i]]
+
     return history #the list of cell should be changed
 
 
@@ -195,4 +245,5 @@ if __name__=="__main__":
     #print(simlar_based_active_domain(x,1,2))
     #print(noise(x,1,2))
     #s=random_uniform(x,2,60)
-    Denial_constraint(x,[["name","dept"],["manager","salary"]],70)
+    s=Denial_constraint(x,[["name","dept"],["manager","salary"]],[30,50])
+    print(s)
