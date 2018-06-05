@@ -103,6 +103,11 @@ def random_uniform(dataset,col,percentage):
 
 
 def remove_duplicates(values):
+    #we can use this library insted our method
+    # import ordered_set
+    # from ordered_set import OrderedSet
+    # c = [1, 3, 4, 2, 1]
+    # c = OrderedSet(c)
     output = []
     seen = set()
     for value in values:
@@ -115,6 +120,7 @@ def remove_duplicates(values):
 
 def Denial_constraint(dataset,rules,percentage):
     """
+    this method add fuctional dependency for now
     :param dataset:
     :param ruls:
     :param percentage:
@@ -137,7 +143,7 @@ def Denial_constraint(dataset,rules,percentage):
 
 
 
-    # devide the rule to sub and obj
+    # devide the rule to sub and obj or left and right side
 
     for j in range(len(rules)):
         sub.append(rules[j][0])
@@ -150,39 +156,33 @@ def Denial_constraint(dataset,rules,percentage):
         indices_obj.append(dataset[0].index(obj[n]))
         pair.append((indices_sub[n], indices_obj[n])) #indeces of the col
 
+    #if  we have only one percentage for all functional dependecy or we have list
+
     if type(percentage)!= list:
         print("percentage is a int")
         number = int((percentage / 100) * (len(dataset) - 1))
+
         # to understand how many rule we should violate from each rule
+
         choise_from_each_rule=int(number/len(indices_sub))
-
-        #print(choise_from_each_rule)
-        print(pair)
-
-
 
         for i in range(len(indices_sub)): #number of the function that we have
             number_choice = np.random.randint(1, len(dataset), choise_from_each_rule)
             dic[indices_sub[i]] = number_choice #for each rule we save the row number
-            #print(number_choice)
             temp=[]
             for j in range(choise_from_each_rule):
                 candidate_for_change.append(dataset[number_choice[j]][indices_sub[i]])
                 temp.append(dataset[number_choice[j]][indices_sub[i]])
                 candidate_for_change_dic[indices_sub[i]] = temp
 
-        print(dic)
-
-
+    #for each function dependecy we have seprate percentage
 
     else:
-        print("percentage is a list")
 
         for i in range(len(indices_sub)):  # number of the function dependency that we have
             number_choice = np.random.randint(1, len(dataset), (int((percentage[i] / 100) * (len(dataset) - 1))))
             dic[indices_sub[i]] = number_choice  # for each rule we save the row number
 
-            # print(number_choice)
             temp=[]
             for j in range(int((percentage[i] / 100) * (len(dataset) - 1))):
 
@@ -190,43 +190,44 @@ def Denial_constraint(dataset,rules,percentage):
                 temp.append(dataset[number_choice[j]][indices_sub[i]])
                 candidate_for_change_dic[indices_sub[i]]=temp
 
-
-        print(dic)
-
-
-    #check for duplicate
-
+    #check for duplicate in each list(values)
 
     for key, values in dic.items():
         new_dic[key] = remove_duplicates(values)
 
-    print(candidate_for_change)
-    print(candidate_for_change_dic)
+    #check if duplicate remove chose new values
+
+    if dic.values() != new_dic.values():
+        for k in dic:
+            while (len(dic[k]) > len(new_dic[k])):
+                new_num = np.random.randint(1, len(dataset), 1)
+                if new_num not in new_dic[k]:
+                    new_dic[k].append(new_num[0])
+
+
+
 
     for key, values in candidate_for_change_dic.items():
         new_dic_values[key] = remove_duplicates(values)
 
-    #print(ready_for_change)
+    #history is a list of all value that we want to change them
     for key, value in new_dic.items():
         for j in range(len(value)):
             history.append(( value[j],key))
 
-    print(history)
-    print(new_dic)
-    print(new_dic_values)
+    #change the candidate value in data base
 
+    for key, value in new_dic.items():
+        print("-----change for rule on col "+str(key)+" ------- ")
+        for j in range(len(value)):
 
-    for i in range(len(new_dic.keys())):
-        for j in range(len(new_dic.values())):
-
-            temp_rand=random.randint(1, len(dataset) - 1)
-            while temp_rand in new_dic.values():
-                print("duplicated")
+            temp_rand = random.randint(1, len(dataset) - 1)
+            while temp_rand in value:
                 temp_rand = random.randint(1, len(dataset) - 1)
-            # print("this value"+dataset[new_dic.values[j]][new_dic.keys[i]]+"changed to "+dataset[temp_rand][new_dic.keys[i]])
-            # dataset[new_dic[i][j]][new_dic.keys[i]]=dataset[temp_rand][new_dic.keys[i]]
+            print(dataset[value[j]][key] + " change to " + dataset[temp_rand][key])
+            dataset[value[j]][key] = dataset[temp_rand][key]
 
-    return history #the list of cell should be changed
+    return dataset
 
 
 
@@ -237,7 +238,7 @@ def Denial_constraint(dataset,rules,percentage):
 
 if __name__=="__main__":
     x=read_csv_dataset("/home/milad/Desktop/error-generator/test.csv")
-    #print(x)
+    print(x)
 
     #print(typoGenerator(x, 1, 2))
     #print(explicit_missing_value(x,1,2))
@@ -245,5 +246,5 @@ if __name__=="__main__":
     #print(simlar_based_active_domain(x,1,2))
     #print(noise(x,1,2))
     #s=random_uniform(x,2,60)
-    s=Denial_constraint(x,[["name","dept"],["manager","salary"]],[30,50])
+    s=Denial_constraint(x,[["name","dept"],["manager","salary"]],[80,50])
     print(s)
