@@ -9,7 +9,7 @@ from random import *
 w=choice
 o=ord
 import random
-
+import butterfingers
 import difflib
 
 
@@ -42,6 +42,11 @@ def typoGenerator(dataset,row,col):
     input_value=dataset[row][col]
     temp="".join(w([z]*1+[w(["",z*2]+[chr(o(w("DGRC FHTV GJYB UOK HKUN JLIM KO NK BMJ IPL O WA ETF ADWZ RYG YIJ CBG QES ZCD TUH XS SQ VNH XVF SFEX WRD".split()[(o(z)&31)-6]))|o(z)&32)]*z.isalpha())])for z in input_value)
     dataset[row][col]=temp
+    return dataset
+
+def typoGenerator2(dataset,row,col):
+    input_value = dataset[row][col]
+    dataset[row][col] = butterfingers.butterfinger(input_value)
     return dataset
 
 def explicit_missing_value(dataset,row,col):
@@ -246,5 +251,6 @@ if __name__=="__main__":
     #print(simlar_based_active_domain(x,1,2))
     #print(noise(x,1,2))
     #s=random_uniform(x,2,60)
-    s=Denial_constraint(x,[["name","dept"],["manager","salary"]],[80,50])
+    #print(typoGenerator2(x,1,0))
+    s=Denial_constraint(x,[["name","dept"],["manager","salary"]],[30,50])
     print(s)
