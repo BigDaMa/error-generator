@@ -8,7 +8,8 @@ from keras.layers.core import Dense, Activation, Dropout
 from keras.layers.recurrent import LSTM, SimpleRNN
 from keras.layers.wrappers import TimeDistributed
 import argparse
-from RNN_utils import *
+import rNN_utils
+# from RNN_utils import *
 
 # Parsing arguments for Network definition
 ap = argparse.ArgumentParser()
@@ -33,7 +34,10 @@ GENERATE_LENGTH = args['generate_length']
 LAYER_NUM = args['layer_num']
 
 # Creating training data
-X, y, VOCAB_SIZE, ix_to_char = load_data(DATA_DIR, SEQ_LENGTH)
+DATA_DIR="/home/milad/Desktop/error-generator/test_learning.csv"
+SEQ_LENGTH=2
+
+X, y, VOCAB_SIZE, ix_to_char = rNN_utils.load_data(DATA_DIR, SEQ_LENGTH)
 
 # Creating and compiling the Network
 model = Sequential()
@@ -45,7 +49,7 @@ model.add(Activation('softmax'))
 model.compile(loss="categorical_crossentropy", optimizer="rmsprop")
 
 # Generate some sample before training to know how bad it is!
-generate_text(model, args['generate_length'], VOCAB_SIZE, ix_to_char)
+rNN_utils.generate_text(model, args['generate_length'], VOCAB_SIZE, ix_to_char)
 
 if not WEIGHTS == '':
   model.load_weights(WEIGHTS)
@@ -59,7 +63,7 @@ if args['mode'] == 'train' or WEIGHTS == '':
     print('\n\nEpoch: {}\n'.format(nb_epoch))
     model.fit(X, y, batch_size=BATCH_SIZE, verbose=1, nb_epoch=1)
     nb_epoch += 1
-    generate_text(model, GENERATE_LENGTH, VOCAB_SIZE, ix_to_char)
+    rNN_utils.generate_text(model, GENERATE_LENGTH, VOCAB_SIZE, ix_to_char)
     if nb_epoch % 10 == 0:
       model.save_weights('checkpoint_layer_{}_hidden_{}_epoch_{}.hdf5'.format(LAYER_NUM, HIDDEN_DIM, nb_epoch))
 
@@ -67,7 +71,7 @@ if args['mode'] == 'train' or WEIGHTS == '':
 elif WEIGHTS == '':
   # Loading the trained weights
   model.load_weights(WEIGHTS)
-  generate_text(model, GENERATE_LENGTH, VOCAB_SIZE, ix_to_char)
+  rNN_utils.generate_text(model, GENERATE_LENGTH, VOCAB_SIZE, ix_to_char)
   print('\n\n')
 else:
   print('\n\nNothing to do!')

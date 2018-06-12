@@ -11,6 +11,7 @@ o=ord
 import random
 import butterfingers
 import difflib
+import sys
 
 
 
@@ -65,7 +66,7 @@ def random_active_domain(dataset,row,col):
     dataset[row][col]=dataset[random_value][col]
     return dataset
 
-def simlar_based_active_domain(dataset,row,col):
+def similar_based_active_domain(dataset,row,col):
     """
     this method change the value to most similar one in active domain
     """
@@ -151,15 +152,29 @@ def Denial_constraint(dataset,rules,percentage):
     # devide the rule to sub and obj or left and right side
 
     for j in range(len(rules)):
-        sub.append(rules[j][0])
-        obj.append(rules[j][1])
+        if len(rules[j])>2:#subject be 2 item
+
+            sub.append([rules[j][0],rules[j][1]])
+            obj.append(rules[j][2])
+        else:
+            sub.append(rules[j][0])
+            obj.append(rules[j][1])
+
 
     #find the index of sub and obj
 
     for n in range(len(sub)):
-        indices_sub.append(dataset[0].index(sub[n]))
-        indices_obj.append(dataset[0].index(obj[n]))
-        pair.append((indices_sub[n], indices_obj[n])) #indeces of the col
+        if type(sub[n])==list:#subject be 2 item
+            indices_sub.append([dataset[0].index(sub[n][0]),dataset[0].index(sub[n][1])])
+            indices_obj.append(dataset[0].index(obj[n]))
+            pair.append((indices_sub[n], indices_obj[n]))  # indeces of the col
+
+
+
+        else:
+            indices_sub.append(dataset[0].index(sub[n]))
+            indices_obj.append(dataset[0].index(obj[n]))
+            pair.append((indices_sub[n], indices_obj[n])) #indeces of the col
 
     #if  we have only one percentage for all functional dependecy or we have list
 
@@ -186,7 +201,13 @@ def Denial_constraint(dataset,rules,percentage):
 
         for i in range(len(indices_sub)):  # number of the function dependency that we have
             number_choice = np.random.randint(1, len(dataset), (int((percentage[i] / 100) * (len(dataset) - 1))))
-            dic[indices_sub[i]] = number_choice  # for each rule we save the row number
+
+            if type(indices_sub[i])==list:
+                dic[indices_sub[i]] = number_choice
+
+
+            else:
+                dic[indices_sub[i]] = number_choice  # for each rule we save the row number
 
             temp=[]
             for j in range(int((percentage[i] / 100) * (len(dataset) - 1))):
@@ -234,8 +255,62 @@ def Denial_constraint(dataset,rules,percentage):
 
     return dataset
 
+def similiarity(L_1, L_2):
+    """
+    this method compute the similarity between 2 list that used in error duplicate
+    """
+    L_1 = set(sys.intern(w) for w in L_1)
+    L_2 = set(sys.intern(w) for w in L_2)
+    to_match = L_1.difference( L_2)
+    against = L_2.difference(L_1)
+    for w in to_match:
+        res = difflib.get_close_matches(w, against)
+        if len(res):
+            against.remove( res[0] )
+    return (len(L_2)-len(against)) / (len(L_1))
 
 
+
+def error_duplicate(dataset,percentage):
+    """
+    this method find similar row and add error to that rows
+    :param dataset:
+    :return:
+    """
+    duplicate = []
+    for i, line1 in enumerate(dataset):
+        for j, line2 in enumerate(dataset):
+            if (similiarity(line1, line2) > 0.9):
+                if i != j:
+                    if [j, i] not in duplicate:
+                        duplicate.append([i, j])
+    #the rows that are duplicate are in duplicate
+    print(duplicate)
+
+    #pic column 0 and for row duplicate we change some thing
+    # I pic the column 0 for now
+    temp=[]
+    for i in range(len(dataset)):
+        temp.append(dataset[i][0])
+
+    #the number that we should voilate
+    number = int((percentage / 100) * (len(dataset) - 1))
+
+    if number>len(duplicate):
+        print("The maximum error would be genrate but it is less  than your request. decrease your percentage")
+
+    for q in range(number):
+        similar = difflib.get_close_matches(dataset[duplicate[q][0]][0], temp)
+        while dataset[duplicate[q][0]][0] in similar: similar.remove(dataset[duplicate[q][0]][0])
+    print("---------change according to duplicate---------------")
+    print(dataset[duplicate[q][0]][0]+" change to "+similar[0])
+    dataset[duplicate[q][0]][0]=similar[0]
+    print(similar)
+
+
+
+    # print(dataset[duplicate[0][0]][0])
+    return dataset
 
 
 
@@ -252,5 +327,7 @@ if __name__=="__main__":
     #print(noise(x,1,2))
     #s=random_uniform(x,2,60)
     #print(typoGenerator2(x,1,0))
-    s=Denial_constraint(x,[["name","dept"],["manager","salary"]],[30,50])
-    print(s)
+
+    # s=Denial_constraint(x,[["name","dept"],["manager","salary"]],[30,50])
+    # print(s)
+    print(error_duplicate(x,30))
