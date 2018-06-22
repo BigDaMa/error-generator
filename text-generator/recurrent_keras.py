@@ -34,7 +34,8 @@ GENERATE_LENGTH = args['generate_length']
 LAYER_NUM = args['layer_num']
 
 # Creating training data
-DATA_DIR="/home/milad/Desktop/error-generator/test_learning.csv"
+# DATA_DIR="/home/milad/Desktop/error-generator/test_learning.csv"
+DATA_DIR="/home/milad/Downloads/books/books/Alices_Adventures_in_Wonderland_by_Lewis_Carroll.rtf"
 SEQ_LENGTH=2
 
 X, y, VOCAB_SIZE, ix_to_char = rNN_utils.load_data(DATA_DIR, SEQ_LENGTH)

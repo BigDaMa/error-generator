@@ -6,6 +6,9 @@ import pandas
 import numpy as np
 import psycopg2
 from random import *
+
+#from blaze.server.tests.test_server import temp_add_server
+
 w=choice
 o=ord
 import random
@@ -35,59 +38,140 @@ def read_csv_dataset(dataset_path, header_exists=True):
 
 
 
-def typoGenerator(dataset,row,col):
+def typoGenerator(dataset,col,percentage):
     """"
     The method add the typos
     row and column start from 0 (zero is the hedder)
     """
-    input_value=dataset[row][col]
-    temp="".join(w([z]*1+[w(["",z*2]+[chr(o(w("DGRC FHTV GJYB UOK HKUN JLIM KO NK BMJ IPL O WA ETF ADWZ RYG YIJ CBG QES ZCD TUH XS SQ VNH XVF SFEX WRD".split()[(o(z)&31)-6]))|o(z)&32)]*z.isalpha())])for z in input_value)
-    dataset[row][col]=temp
+    typoGenerator_history = []
+    number = int((percentage / 100) * (len(dataset) - 1))
+    print("---------Change according to typoGenrator method ---------------\n")
+    for i in range(number):
+        random_value = random.randint(1, len(dataset) - 1)
+        while random_value in typoGenerator_history:
+            random_value = random.randint(1, len(dataset) - 1)
+        typoGenerator_history.append(random_value)
+
+        input_value=dataset[random_value][col]
+        temp="".join(w([z]*1+[w(["",z*2]+[chr(o(w("DGRC FHTV GJYB UOK HKUN JLIM KO NK BMJ IPL O WA ETF ADWZ RYG YIJ CBG QES ZCD TUH XS SQ VNH XVF SFEX WRD".split()[(o(z)&31)-6]))|o(z)&32)]*z.isalpha())])for z in input_value)
+        dataset[random_value][col]=temp
+        print("row: {} col: {} : '{}' changed to '{}'  ".format(random_value,col,input_value,temp))
     return dataset
 
-def typoGenerator2(dataset,row,col):
-    input_value = dataset[row][col]
-    dataset[row][col] = butterfingers.butterfinger(input_value)
+def typoGenerator2(dataset,col,percentage):
+
+    typoGenerator2_history = []
+    number_row = int((percentage / 100) * (len(dataset) - 1))
+    print("---------Change according to typoGenrator method(Butterfinger) ---------------\n")
+
+    for i in range(number_row):
+        random_value = random.randint(1, len(dataset) - 1)
+        while random_value in typoGenerator2_history:
+            random_value = random.randint(1, len(dataset) - 1)
+        typoGenerator2_history.append(random_value)
+
+
+        input_value = dataset[random_value][col]
+        temp=butterfingers.butterfinger(input_value)
+        dataset[random_value][col] = temp
+        print("row: {} col: {} : '{}' changed to '{}'  ".format(random_value, col, input_value, temp))
     return dataset
 
-def explicit_missing_value(dataset,row,col):
+def explicit_missing_value(dataset,col,percentage):
     """
     this method explicitly remove one value
     """
-    dataset[row][col]=""
+    explicit_missing_value_history = []
+    number = int((percentage / 100) * (len(dataset) - 1))
+    print("---------Change according to explicit missing value method ---------------\n")
+    for i in range(number):
+        random_value = random.randint(1, len(dataset) - 1)
+        while random_value in explicit_missing_value_history:
+            random_value = random.randint(1, len(dataset) - 1)
+        explicit_missing_value_history.append(random_value)
+        temp=dataset[random_value][col]
+        dataset[random_value][col]=""
+        print("row: {} col: {} : '{}' changed to 'Nothing'  ".format(random_value, col,temp ))
     return dataset
 
 
-def random_active_domain(dataset,row,col):
+def random_active_domain(dataset,col,percentage):
     """"
     this method randomly change the value with active domain
     """
-    random_value = random.randint(1,len(dataset)-1)
-    dataset[row][col]=dataset[random_value][col]
+    random_active_domain_history = []
+    number_row_random = int((percentage / 100) * (len(dataset) - 1))
+    print("---------Change according to Random Active domin method ---------------\n")
+    for i in range(number_row_random):
+        random_values_row = random.randint(1, len(dataset) - 1)
+        while random_values_row in random_active_domain_history:
+            random_values_row = random.randint(1, len(dataset) - 1)
+        random_active_domain_history.append(random_values_row)
+
+
+        random_value = random.randint(1,len(dataset)-1)
+        while random_value==random_values_row:
+            random_value = random.randint(1, len(dataset) - 1)
+
+        input_value_random_method=dataset[random_values_row][col]
+        temp_random_method = dataset[random_value][col]
+        dataset[random_values_row][col] = temp_random_method
+
+        print("row: {} col: {} : '{}' changed to '{}'  ".format(random_values_row, col, input_value_random_method,temp_random_method))
     return dataset
 
-def similar_based_active_domain(dataset,row,col):
+def similar_based_active_domain(dataset,col,percentage):
     """
     this method change the value to most similar one in active domain
     """
-    temp=[]
+    similar_based_active_domain_history = []
+    number_similar_active_domain = int((percentage / 100) * (len(dataset) - 1))
+    print("---------Change according to similar based active domin method ---------------\n")
+
+    temp = []
     for i in range(len(dataset)):
         temp.append(dataset[i][col])
 
-    similar=difflib.get_close_matches(dataset[row][col], temp)
-    while dataset[row][col] in similar: similar.remove(dataset[row][col])
-    dataset[row][col]=similar[0]
+    for i in range(number_similar_active_domain):
+        random_value = random.randint(1, len(dataset) - 1)
+        while random_value in similar_based_active_domain_history:
+            random_value = random.randint(1, len(dataset) - 1)
+        similar_based_active_domain_history.append(random_value)
+
+
+
+
+        selected_value=dataset[random_value][col]
+        similar=difflib.get_close_matches(selected_value, temp)
+        while selected_value in similar: similar.remove(selected_value)
+        if len(similar)==0:
+            print("there is no similar value to '{}' in column {}".format(selected_value,col))
+        else:
+            dataset[random_value][col]=similar[0]
+            print("row: {} col: {} : '{}' changed to '{}'  ".format(random_value,col,selected_value,similar[0]))
     return dataset
 
 
-def noise(dataset,row,col):
+def noise(dataset,col,percentage):
     """
     this method add the noise to one active domain
     """
     # for now we add
     mu, sigma = 0, 0.1 # mean and standard deviation
     noise = np.random.normal(mu, sigma, 1)
-    dataset[row][col]=float(dataset[row][col])+noise[0]
+
+    noise_history = []
+    number = int((percentage / 100) * (len(dataset) - 1))
+    print("---------Change according to noise method ---------------\n")
+    for i in range(number):
+        random_value = random.randint(1, len(dataset) - 1)
+        while random_value in noise_history:
+            random_value = random.randint(1, len(dataset) - 1)
+        noise_history.append(random_value)
+        selected=dataset[random_value][col]
+        dataset[random_value][col]=float(selected)+noise[0]
+
+        print("row: {} col: {} : '{}' changed to '{}'  ".format(random_value,col,selected,dataset[random_value][col]))
     return dataset
 #----------How to chouse value----------------------
 
@@ -96,7 +180,7 @@ def random_uniform(dataset,col,percentage):
     :param dataset:
     :param col:
     :param percentage:
-    :return: the (row,col) shoul be change
+    :return: the (row,col) should be change
     """
     number= int((percentage/100)*(len(dataset)-1))
     print(number)
@@ -146,9 +230,7 @@ def Denial_constraint(dataset,rules,percentage):
     new_dic = {}
     new_dic_values = {}
 
-
-
-
+    print("---------Change according to functinal dependency method ---------------\n\n")
     # devide the rule to sub and obj or left and right side
 
     for j in range(len(rules)):
@@ -244,13 +326,14 @@ def Denial_constraint(dataset,rules,percentage):
     #change the candidate value in data base
 
     for key, value in new_dic.items():
+
         print("-----change for rule on col "+str(key)+" ------- ")
         for j in range(len(value)):
 
             temp_rand = random.randint(1, len(dataset) - 1)
             while temp_rand in value:
                 temp_rand = random.randint(1, len(dataset) - 1)
-            print(dataset[value[j]][key] + " change to " + dataset[temp_rand][key])
+            print("row: {} col: {} : '{}' changed to '{}'  ".format(value[j],key,dataset[value[j]][key],dataset[temp_rand][key]))
             dataset[value[j]][key] = dataset[temp_rand][key]
 
     return dataset
@@ -302,14 +385,10 @@ def error_duplicate(dataset,percentage):
     for q in range(number):
         similar = difflib.get_close_matches(dataset[duplicate[q][0]][0], temp)
         while dataset[duplicate[q][0]][0] in similar: similar.remove(dataset[duplicate[q][0]][0])
-    print("---------change according to duplicate---------------")
-    print(dataset[duplicate[q][0]][0]+" change to "+similar[0])
+    print("---------change according to duplicate---------------\n")
+    print("row: {} col: {} : '{}' changed to '{}'  ".format(duplicate[q][0],0,dataset[duplicate[q][0]][0],similar[0]))
     dataset[duplicate[q][0]][0]=similar[0]
-    print(similar)
 
-
-
-    # print(dataset[duplicate[0][0]][0])
     return dataset
 
 
@@ -319,15 +398,21 @@ def error_duplicate(dataset,percentage):
 if __name__=="__main__":
     x=read_csv_dataset("/home/milad/Desktop/error-generator/test.csv")
     print(x)
+    """
+    each method returns dataset if you like to use several of them in one data set pass the output to secound one
+    Methods (dataset, col , percentage)
+    """
+    random_active_domain(x,1,50)
+    typoGenerator(x, 1, 50)
+    typoGenerator2(x,1,50)
+    explicit_missing_value(x,1,50)
+    similar_based_active_domain(x,0,50)
+    noise(x,2,50)
 
-    #print(typoGenerator(x, 1, 2))
-    #print(explicit_missing_value(x,1,2))
-    #print(random_active_domain(x,1,2))
-    #print(simlar_based_active_domain(x,1,2))
-    #print(noise(x,1,2))
-    #s=random_uniform(x,2,60)
-    #print(typoGenerator2(x,1,0))
 
-    # s=Denial_constraint(x,[["name","dept"],["manager","salary"]],[30,50])
-    # print(s)
-    print(error_duplicate(x,30))
+    s=random_uniform(x,2,60) # i have to remove this one because random is equal to random uniform
+
+
+    Denial_constraint(x,[["name","dept"],["manager","salary"]],[30,50])
+
+    # print(error_duplicate(x,30)) #this is not efficient 
