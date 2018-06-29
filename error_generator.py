@@ -415,4 +415,4 @@ if __name__=="__main__":
 
     Denial_constraint(x,[["name","dept"],["manager","salary"]],[30,50])
 
-    # print(error_duplicate(x,30)) #this is not efficient 
+    # print(error_duplicate(x,30)) #this is not efficient
