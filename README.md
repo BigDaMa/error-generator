@@ -18,7 +18,7 @@ in the following, you can find the list of the way that you can inject your data
 - Denial_constraint
    - function dependency: list of the columns that have functional dependency will be asked from user and base on that dataset will inject 
 - error_duplicatethe
-    - duplicate will find in the dataset and according to duplicate error add to them.
+    - duplicate will find in the dataset and according to duplicate, errors will add to dataset.
 
 
 this project is a python program that should run it over your dataset for injecting your data.
