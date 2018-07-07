@@ -7,7 +7,6 @@ import numpy as np
 import psycopg2
 from random import *
 
-#from blaze.server.tests.test_server import temp_add_server
 
 w=choice
 o=ord
@@ -18,7 +17,8 @@ import sys
 
 
 
-#-----------------Method----------------------------
+#-----------------Methods----------------------------
+
 
 
 def read_csv_dataset(dataset_path, header_exists=True):
@@ -36,7 +36,7 @@ def read_csv_dataset(dataset_path, header_exists=True):
         dataset_dataframe = dataset_dataframe.apply(lambda x: x.str.strip())
         return dataset_dataframe.get_values().tolist()
 
-
+#-----------------TYPOYS--------------------------------
 
 def typoGenerator(dataset,col,percentage):
     """"
