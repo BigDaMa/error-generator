@@ -12,28 +12,30 @@ import random
 import butterfingers
 import difflib
 import sys
-
+dataset_dataframe_version=None
 
 
 #----------------- read csv file ----------------------------
-
 
 def read_csv_dataset(dataset_path, header_exists=True):
     """
     The method reads a dataset from a csv file path.
     """
+    global dataset_dataframe_version
+    dataset_dataframe_version = pandas.read_csv(dataset_path)
     if header_exists:
         dataset_dataframe = pandas.read_csv(dataset_path, sep=",", header="infer", encoding="utf-8", dtype=str,
                                             keep_default_na=False, low_memory=False)
+
         dataset_dataframe = dataset_dataframe.apply(lambda x: x.str.strip())
         return [dataset_dataframe.columns.get_values().tolist()] + dataset_dataframe.get_values().tolist()
     else:
         dataset_dataframe = pandas.read_csv(dataset_path, sep=",", header=None, encoding="utf-8", dtype=str,
                                             keep_default_na=False)
+
+
         dataset_dataframe = dataset_dataframe.apply(lambda x: x.str.strip())
         return dataset_dataframe.get_values().tolist()
-
-
 #-----------------TYPOYS--------------------------------
 
 def typoGenerator(col_name,percentage):
@@ -100,6 +102,29 @@ def explicit_missing_value(col_name,percentage):
         dataset[random_value][col]=""
         print("row: {} col: {} : '{}' changed to ' '  ".format(random_value, col,temp ))
     return dataset
+
+
+def implicit_missing_value_mean(col_name,percentage):
+    implicit_missing_value_history = []
+    number = int((percentage / 100) * (len(dataset) - 1))
+    col = dataset[0].index(col_name)
+    mean_value = dataset_dataframe_version[col_name].mean(axis=0)
+
+    print(mean_value)
+    print("---------Change according to implicit missing value(Mean) method ---------------\n")
+    for i in range(number):
+        random_value = random.randint(1, len(dataset) - 1)
+        while random_value in implicit_missing_value_history:
+            random_value = random.randint(1, len(dataset) - 1)
+        implicit_missing_value_history.append(random_value)
+        temp = dataset[random_value][col]
+        if temp==mean_value:
+            mean_value=mean_value+1
+        dataset[random_value][col] = mean_value
+        print("row: {} col: {} : '{}' changed to {}  ".format(random_value, col, temp,mean_value))
+    return dataset
+
+
 
 
 #--------------------ACTIVE DOMAIN -----------------------------------
@@ -201,6 +226,7 @@ if __name__=="__main__":
     random_active_domain("dept",50)
     similar_based_active_domain("dept",50)
     noise("salary",50)
+    implicit_missing_value_mean("salary",50)
 
 
 
