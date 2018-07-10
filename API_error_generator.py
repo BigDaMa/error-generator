@@ -127,17 +127,22 @@ def explicit_missing_value(col_name,percentage):
         print("row: {} col: {} : '{}' changed to ' '  ".format(random_value, col,temp ))
     return dataset
 
-
 def implicit_missing_value_mean_median_mode(col_name,percentage):
     implicit_missing_value_history = []
     number = int((percentage / 100) * (len(dataset) - 1))
     col = dataset[0].index(col_name)
-    mean_value = dataset_dataframe_version[col_name].mean(axis=0)
-    median_value = dataset_dataframe_version[col_name].median(axis=0)
+
     mod_value = dataset_dataframe_version[col_name].mode()
+    sort_frame = dataset_dataframe_version.sort_values(col_name)
+    size=dataset_dataframe_version.shape[0]
+    index=int(size/2)+1
+    median_value=sort_frame[col_name][index]
+
+    mod_value=list(mod_value.values)[0]
 
 
-    print("---------Change according to implicit missing value(Mean/Median/Mode) method ---------------\n")
+
+    print("---------Change according to implicit missing value(Median/Mode) method ---------------\n")
     for i in range(number):
         random_value = random.randint(1, len(dataset) - 1)
         while random_value in implicit_missing_value_history:
@@ -145,17 +150,18 @@ def implicit_missing_value_mean_median_mode(col_name,percentage):
         implicit_missing_value_history.append(random_value)
         temp = dataset[random_value][col]
 
-        col_list=[float(mean_value),float(median_value),float(mod_value)]
-        selected=min(col_list, key=lambda x: abs(x - float(temp)))
-
-        while temp==selected:
+        col_list=[median_value,mod_value]
+        rand=np.random.randint(0,2)
+        selected=col_list[rand]
+        while str(temp)==str(selected):
             col_list=col_list.remove(selected)
-            selected = min(col_list, key=lambda x: abs(x - float(temp)))
+
         if len(col_list)==0:
-            selected=mean_value+1
+            selected=median_value+median_value
         dataset[random_value][col] = selected
         print("row: {} col: {} : '{}' changed to {}  ".format(random_value, col, temp,selected))
     return dataset
+
 
 
 
@@ -213,7 +219,7 @@ def similar_based_active_domain(col_name,percentage):
         similar_based_active_domain_history.append(random_value)
 
         selected_value=dataset[random_value][col]
-        similar=difflib.get_close_matches(selected_value, temp,n=10,cutoff=0)
+        similar=difflib.get_close_matches(selected_value, temp,n=1000,cutoff=0)
         while selected_value in similar: similar.remove(selected_value)
         if len(similar)==0:
             print("there is no similar value to '{}' in your requested column".format(selected_value))
@@ -228,10 +234,10 @@ def similar_based_active_domain(col_name,percentage):
 
 def noise(col_name,percentage):
     """
-    this method add the noise to one active domain
+    this method add the noise to one active domain(numeric only)
     """
     # for now we add
-    mu, sigma = 0, 0.1 # mean and standard deviation
+    mu, sigma = 0, 1 # mean and standard deviation
     noise = np.random.normal(mu, sigma, 1)
 
     noise_history = []
@@ -244,8 +250,14 @@ def noise(col_name,percentage):
             random_value = random.randint(1, len(dataset) - 1)
         noise_history.append(random_value)
         selected=dataset[random_value][col]
+        add_value=float(noise[0])*float(selected)
+        if(isinstance(selected, float)):
+            dataset[random_value][col] = float(selected) + add_value
+        else:
+            if (int(float(selected) + add_value))==selected:
+                dataset[random_value][col] = int(float(selected) + add_value)+1
+            dataset[random_value][col] = int(float(selected) + add_value)
 
-        dataset[random_value][col]=float(selected)+noise[0]
 
         print("row: {} col: {} : '{}' changed to '{}'  ".format(random_value,col,selected,dataset[random_value][col]))
     return dataset
@@ -285,7 +297,8 @@ def noise_gaussian(col_name,percentage,noise_rate):
                 dataset[random_value][col] = replaced_value
             else:
 
-                replaced_value = temp + added_str
+                rand = np.random.randint(0, len(temp))
+                replaced_value = temp[:rand] + added_str+ temp[rand:]
                 dataset[random_value][col] = replaced_value
 
         else:
@@ -327,7 +340,7 @@ if __name__=="__main__":
     random_active_domain("ZIP",1)
     similar_based_active_domain("City",1)
     noise("ZIP",1)
-    noise_gaussian("State",1,10)
+    noise_gaussian("ZIP",1,10)
 
     write_csv_dataset("output/out.csv",dataset)
 
