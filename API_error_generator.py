@@ -80,6 +80,14 @@ def typoGenerator(col_name,percentage):
         typoGenerator_history.append(random_value)
 
         input_value=dataset[random_value][col]
+
+        while (len(input_value) == 0):
+            random_value = random.randint(1, len(dataset) - 1)
+            while random_value in typoGenerator_history:
+                random_value = random.randint(1, len(dataset) - 1)
+            typoGenerator_history.append(random_value)
+            input_value = dataset[random_value][col]
+
         temp="".join(w([z]*0+[w(["",z*2]+[chr(o(w("DGRC FHTV GJYB UOK HKUN JLIM KO NK BMJ IPL O WA ETF ADWZ RYG YIJ CBG QES ZCD TUH XS SQ VNH XVF SFEX WRD".split()[(o(z)&31)-6]))|o(z)&32)]*z.isalpha())])for z in input_value)
         dataset[random_value][col]=temp
         print("row: {} col: {} : '{}' changed to '{}'  ".format(random_value,col,input_value,temp))
@@ -99,8 +107,13 @@ def typoGenerator2(col_name,percentage):
             random_value = random.randint(1, len(dataset) - 1)
         typoGenerator2_history.append(random_value)
 
-
         input_value = dataset[random_value][col]
+        while (len(input_value) == 0):
+            random_value = random.randint(1, len(dataset) - 1)
+            while random_value in typoGenerator2_history:
+                random_value = random.randint(1, len(dataset) - 1)
+            typoGenerator2_history.append(random_value)
+            input_value = dataset[random_value][col]
         temp=butterfingers.butterfinger(input_value)
         dataset[random_value][col] = temp
         print("row: {} col: {} : '{}' changed to '{}'  ".format(random_value, col, input_value, temp))
@@ -123,6 +136,13 @@ def explicit_missing_value(col_name,percentage):
             random_value = random.randint(1, len(dataset) - 1)
         explicit_missing_value_history.append(random_value)
         temp=dataset[random_value][col]
+        while (len(temp) == 0):
+            random_value = random.randint(1, len(dataset) - 1)
+            while random_value in explicit_missing_value_history:
+                random_value = random.randint(1, len(dataset) - 1)
+            explicit_missing_value_history.append(random_value)
+            temp = dataset[random_value][col]
+
         dataset[random_value][col]=""
         print("row: {} col: {} : '{}' changed to ' '  ".format(random_value, col,temp ))
     return dataset
@@ -153,11 +173,12 @@ def implicit_missing_value_mean_median_mode(col_name,percentage):
         col_list=[median_value,mod_value]
         rand=np.random.randint(0,2)
         selected=col_list[rand]
+
         while str(temp)==str(selected):
             col_list=col_list.remove(selected)
+            if col_list is None:
+                selected = median_value + median_value
 
-        if len(col_list)==0:
-            selected=median_value+median_value
         dataset[random_value][col] = selected
         print("row: {} col: {} : '{}' changed to {}  ".format(random_value, col, temp,selected))
     return dataset
@@ -199,7 +220,7 @@ def random_active_domain(col_name,percentage):
     return dataset
 
 
-def similar_based_active_domain(col_name,percentage):
+def similar_based_active_domain(col_name, percentage):
     """
     this method change the value to most similar one in active domain
     """
@@ -217,16 +238,23 @@ def similar_based_active_domain(col_name,percentage):
         while random_value in similar_based_active_domain_history:
             random_value = random.randint(1, len(dataset) - 1)
         similar_based_active_domain_history.append(random_value)
+        selected_value = dataset[random_value][col]
 
-        selected_value=dataset[random_value][col]
-        similar=difflib.get_close_matches(selected_value, temp,n=1000,cutoff=0)
+        while (len(selected_value) == 0):
+            random_value = random.randint(1, len(dataset) - 1)
+            while random_value in similar_based_active_domain_history:
+                random_value = random.randint(1, len(dataset) - 1)
+            similar_based_active_domain_history.append(random_value)
+            selected_value = dataset[random_value][col]
+
+        similar = difflib.get_close_matches(selected_value, temp, n=1000, cutoff=0)
         while selected_value in similar: similar.remove(selected_value)
-        if len(similar)==0:
+        if len(similar) == 0:
             print("there is no similar value to '{}' in your requested column".format(selected_value))
 
         else:
-            dataset[random_value][col]=similar[0]
-            print("row: {} col: {} : '{}' changed to '{}'  ".format(random_value,col,selected_value,similar[0]))
+            dataset[random_value][col] = similar[0]
+            print("row: {} col: {} : '{}' changed to '{}'  ".format(random_value, col, selected_value, similar[0]))
     return dataset
 
 
@@ -275,6 +303,15 @@ def noise_gaussian(col_name,percentage,noise_rate):
             random_value = random.randint(1, len(dataset) - 1)
         implicit_missing_value_history.append(random_value)
         temp = dataset[random_value][col]
+
+        while (len(temp) == 0):
+            random_value = random.randint(1, len(dataset) - 1)
+            while random_value in implicit_missing_value_history:
+                random_value = random.randint(1, len(dataset) - 1)
+            implicit_missing_value_history.append(random_value)
+            temp = dataset[random_value][col]
+
+
         # print(type(temp))
         if (isinstance(temp, str)):
 
@@ -321,26 +358,22 @@ def noise_gaussian(col_name,percentage,noise_rate):
 
 if __name__=="__main__":
 
-    # dataset = read_csv_dataset("/home/milad/Desktop/error-generator/dataset/test.csv")
-    # typoGenerator("dept",50)
-    # typoGenerator2("dept",50)
-    # explicit_missing_value("dept",50)
-    # random_active_domain("dept",50)
-    # similar_based_active_domain("dept",50)
-    # noise("salary",50)
-    # implicit_missing_value_mean_median_mode("salary",50)
-    # noise_gaussian("salary", 50, -10)
-    # write_csv_dataset("output/out.csv", dataset)
+    #---------------Example one ------------------------
 
     dataset = read_csv_dataset("dataset/address_10_ground_truth.csv")
-    typoGenerator("FirstName",1)
+    # Function(column_name,percentage)
+
+    typoGenerator("Address",1)
     typoGenerator2("City",1)
-    explicit_missing_value("Address",1)
-    implicit_missing_value_mean_median_mode("ZIP", 1)
-    random_active_domain("ZIP",1)
+
+    explicit_missing_value("POCityStateZip",1)
+    implicit_missing_value_mean_median_mode("State", 1)
+
+    random_active_domain("SSN",1)
     similar_based_active_domain("City",1)
-    noise("ZIP",1)
-    noise_gaussian("ZIP",1,10)
+
+    noise("ZIP",1)#only numeric data
+    noise_gaussian("RecID",1,10)
 
     write_csv_dataset("output/out.csv",dataset)
 
