@@ -24,6 +24,7 @@ import sys
 dataset_dataframe_version=None
 import chainer, chainer.links as L,chainer.functions as F
 from chainer import Variable
+import math
 w=choice
 o=ord
 #######################################################
@@ -62,7 +63,7 @@ def write_csv_dataset(dataset_path, dataset_table):
 
 #-----------------TYPOYS--------------------------------
 
-def typoGenerator(col_name,percentage):
+def typoGenerator(percentage):
     """"
     The method add the typos
     row and colu  mn start from 0 (zero is the hedder)
@@ -70,7 +71,9 @@ def typoGenerator(col_name,percentage):
     typoGenerator_history = []
     number = int((percentage / 100) * (len(dataset) - 1))
 
-    col=dataset[0].index(col_name)
+    col=random.randint(0, len(dataset[0]) - 1)
+    # col=dataset[0].index(col_name)
+    print()
 
     print("---------Change according to typoGenrator method ---------------\n")
     for i in range(number):
@@ -94,11 +97,12 @@ def typoGenerator(col_name,percentage):
     return dataset
 
 
-def typoGenerator2(col_name,percentage):
+def typoGenerator2(percentage):
 
     typoGenerator2_history = []
     number_row = int((percentage / 100) * (len(dataset) - 1))
-    col = dataset[0].index(col_name)
+    col = random.randint(0, len(dataset[0]) - 1)
+    # col = dataset[0].index(col_name)
     print("---------Change according to typoGenrator method(Butterfinger) ---------------\n")
 
     for i in range(number_row):
@@ -122,13 +126,14 @@ def typoGenerator2(col_name,percentage):
 
 #-------------------- MISSING VALUE----------------------------------
 
-def explicit_missing_value(col_name,percentage):
+def explicit_missing_value(percentage):
     """
     this method explicitly remove one value
     """
     explicit_missing_value_history = []
     number = int((percentage / 100) * (len(dataset) - 1))
-    col = dataset[0].index(col_name)
+    col = random.randint(0, len(dataset[0]) - 1)
+    # col = dataset[0].index(col_name)
     print("---------Change according to explicit missing value method ---------------\n")
     for i in range(number):
         random_value = random.randint(1, len(dataset) - 1)
@@ -147,10 +152,12 @@ def explicit_missing_value(col_name,percentage):
         print("row: {} col: {} : '{}' changed to ' '  ".format(random_value, col,temp ))
     return dataset
 
-def implicit_missing_value_mean_median_mode(col_name,percentage):
+def implicit_missing_value_mean_median_mode(percentage):
     implicit_missing_value_history = []
     number = int((percentage / 100) * (len(dataset) - 1))
-    col = dataset[0].index(col_name)
+    col = random.randint(0, len(dataset[0]) - 1)
+    # col = dataset[0].index(col_name)
+    col_name=dataset[0][col]
 
     mod_value = dataset_dataframe_version[col_name].mode()
     sort_frame = dataset_dataframe_version.sort_values(col_name)
@@ -190,13 +197,14 @@ def implicit_missing_value_mean_median_mode(col_name,percentage):
 #--------------------ACTIVE DOMAIN -----------------------------------
 
 
-def random_active_domain(col_name,percentage):
+def random_active_domain(percentage):
     """"
     this method randomly change the value with active domain
     """
     random_active_domain_history = []
     number_row_random = int((percentage / 100) * (len(dataset) - 1))
-    col = dataset[0].index(col_name)
+    col = random.randint(0, len(dataset[0]) - 1)
+    # col = dataset[0].index(col_name)
 
     print("---------Change according to Random Active domin method ---------------\n")
     for i in range(number_row_random):
@@ -220,13 +228,14 @@ def random_active_domain(col_name,percentage):
     return dataset
 
 
-def similar_based_active_domain(col_name, percentage):
+def similar_based_active_domain(percentage):
     """
     this method change the value to most similar one in active domain
     """
     similar_based_active_domain_history = []
     number_similar_active_domain = int((percentage / 100) * (len(dataset) - 1))
-    col = dataset[0].index(col_name)
+    col = random.randint(0, len(dataset[0]) - 1)
+    # col = dataset[0].index(col_name)
     print("---------Change according to similar based active domin method ---------------\n")
 
     temp = []
@@ -260,17 +269,19 @@ def similar_based_active_domain(col_name, percentage):
 
 #--------------------------NOISE----------------------------------
 
-def noise(col_name,percentage):
+
+def noise(percentage):
     """
     this method add the noise to one active domain(numeric only)
     """
     # for now we add
     mu, sigma = 0, 1 # mean and standard deviation
     noise = np.random.normal(mu, sigma, 1)
-
     noise_history = []
     number = int((percentage / 100) * (len(dataset) - 1))
-    col = dataset[0].index(col_name)
+    col = random.randint(0, len(dataset[0]) - 1)
+
+    # col = dataset[0].index(col_name)
     print("---------Change according to noise method ---------------\n")
     for i in range(number):
         random_value = random.randint(1, len(dataset) - 1)
@@ -278,22 +289,65 @@ def noise(col_name,percentage):
             random_value = random.randint(1, len(dataset) - 1)
         noise_history.append(random_value)
         selected=dataset[random_value][col]
-        add_value=float(noise[0])*float(selected)
-        if(isinstance(selected, float)):
-            dataset[random_value][col] = float(selected) + add_value
+
+        while (len(selected) == 0):
+            random_value = random.randint(1, len(dataset) - 1)
+            while random_value in noise_history:
+                random_value = random.randint(1, len(dataset) - 1)
+            noise_history.append(random_value)
+            selected = dataset[random_value][col]
+
+
+        asci_number=""
+        noisy_value=""
+        if (isinstance(selected, str)):
+
+            for ch in selected:
+                code = ord(ch)
+                digits = int(math.log10(code)) + 1
+                if digits<=2:
+                    code=str(code)
+                    code=code.zfill(3)
+                else:
+                    code = str(code)
+                asci_number=asci_number+code
+
+            string_noise=int(int(asci_number)*noise[0])
+            string_noise=string_noise+int(asci_number)
+            string_noise=str(string_noise)
+            three_number=int(len(string_noise)/3)
+            if len(string_noise)%3 !=0:
+                three_number=three_number+1
+            for i in range(three_number):
+
+                three=string_noise[-3:]
+                noisy_value=noisy_value+chr(abs(int(three)))
+                string_noise=string_noise.replace(three,'',1)
+            noisy_value=noisy_value[::-1]
+            dataset[random_value][col]=noisy_value
+            print("row: {} col: {} : '{}' changed to '{}'  ".format(random_value, col, selected,noisy_value))
+
         else:
-            if (int(float(selected) + add_value))==selected:
-                dataset[random_value][col] = int(float(selected) + add_value)+1
-            dataset[random_value][col] = int(float(selected) + add_value)
+            add_value=float(noise[0])*float(selected)
+            if(isinstance(selected, float)):
+                dataset[random_value][col] = float(selected) + add_value
+            else:
+                if (int(float(selected) + add_value))==selected:
+                    dataset[random_value][col] = int(float(selected) + add_value)+1
+                dataset[random_value][col] = int(float(selected) + add_value)
 
 
-        print("row: {} col: {} : '{}' changed to '{}'  ".format(random_value,col,selected,dataset[random_value][col]))
+            print("row: {} col: {} : '{}' changed to '{}'  ".format(random_value,col,selected,dataset[random_value][col]))
     return dataset
 
-def noise_gaussian(col_name,percentage,noise_rate):
+
+
+
+def noise_gaussian(percentage,noise_rate):
     implicit_missing_value_history = []
     number = int((percentage / 100) * (len(dataset) - 1))
-    col = dataset[0].index(col_name)
+    col = random.randint(0, len(dataset[0]) - 1)
+    # col = dataset[0].index(col_name)
 
 
     print("---------Change according to gaussian noise method ---------------\n")
@@ -363,17 +417,17 @@ if __name__=="__main__":
     dataset = read_csv_dataset("dataset/address_10_ground_truth.csv")
     # Function(column_name,percentage)
 
-    typoGenerator("Address",1)
-    typoGenerator2("City",1)
+    typoGenerator(1)
+    typoGenerator2(1)
 
-    explicit_missing_value("POCityStateZip",1)
-    implicit_missing_value_mean_median_mode("State", 1)
+    explicit_missing_value(1)
+    implicit_missing_value_mean_median_mode(1)
 
-    random_active_domain("SSN",1)
-    similar_based_active_domain("City",1)
+    random_active_domain(1)
+    similar_based_active_domain(1)
 
-    noise("ZIP",1)#only numeric data
-    noise_gaussian("RecID",1,10)
+    noise(1)
+    noise_gaussian(1,10) #percentage,noise_rate  #you can specify noise rate in this function
 
     write_csv_dataset("output/out.csv",dataset)
 
