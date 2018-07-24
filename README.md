@@ -19,14 +19,15 @@ in the following, you can find the list of the ways that you can inject your dat
    - randomly one value from active domain replace with the selected value
 - Similar based Active domain
     - the most similar value from the active domain will pick and replace with the selected value 
-- White noise (for numeric values) min=0 var=1 
-    - white noise added to the selected value
+- White noise (min=0, var=1) 
+    - white noise added to the selected value(for string value the noise add to asci code of them)
 - gaussian noise:
-    - the Gaussian noise added to the selected value (for string value the noise add to asci code of them)
+    - the Gaussian noise added to the selected value (for string value the noise add to asci code of them).
+    in this method, you can specify the noise rate as well.
     
 # Installation
 this project is a python program that should run it over your dataset for injecting your data.
-All of the methods have their own function that you should call them and give the function (column_name, percentage) you wish for injection.
+All of the methods have their own function that you should call them and give the function (percentage) you wish for injection.
 
 # Example
 the list of functions and examples can find under API_error_generator.py
