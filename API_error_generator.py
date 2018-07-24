@@ -71,7 +71,7 @@ def typoGenerator(percentage):
     typoGenerator_history = []
     number = int((percentage / 100) * (len(dataset) - 1))
 
-    col=random.randint(0, len(dataset[0]) - 1)
+
     # col=dataset[0].index(col_name)
     print()
 
@@ -81,6 +81,7 @@ def typoGenerator(percentage):
         while random_value in typoGenerator_history:
             random_value = random.randint(1, len(dataset) - 1)
         typoGenerator_history.append(random_value)
+        col = random.randint(0, len(dataset[0]) - 1)
 
         input_value=dataset[random_value][col]
 
@@ -101,7 +102,7 @@ def typoGenerator2(percentage):
 
     typoGenerator2_history = []
     number_row = int((percentage / 100) * (len(dataset) - 1))
-    col = random.randint(0, len(dataset[0]) - 1)
+    # col = random.randint(0, len(dataset[0]) - 1)
     # col = dataset[0].index(col_name)
     print("---------Change according to typoGenrator method(Butterfinger) ---------------\n")
 
@@ -111,6 +112,7 @@ def typoGenerator2(percentage):
             random_value = random.randint(1, len(dataset) - 1)
         typoGenerator2_history.append(random_value)
 
+        col = random.randint(0, len(dataset[0]) - 1)
         input_value = dataset[random_value][col]
         while (len(input_value) == 0):
             random_value = random.randint(1, len(dataset) - 1)
@@ -132,7 +134,7 @@ def explicit_missing_value(percentage):
     """
     explicit_missing_value_history = []
     number = int((percentage / 100) * (len(dataset) - 1))
-    col = random.randint(0, len(dataset[0]) - 1)
+    # col = random.randint(0, len(dataset[0]) - 1)
     # col = dataset[0].index(col_name)
     print("---------Change according to explicit missing value method ---------------\n")
     for i in range(number):
@@ -140,6 +142,8 @@ def explicit_missing_value(percentage):
         while random_value in explicit_missing_value_history:
             random_value = random.randint(1, len(dataset) - 1)
         explicit_missing_value_history.append(random_value)
+
+        col = random.randint(0, len(dataset[0]) - 1)
         temp=dataset[random_value][col]
         while (len(temp) == 0):
             random_value = random.randint(1, len(dataset) - 1)
@@ -152,22 +156,23 @@ def explicit_missing_value(percentage):
         print("row: {} col: {} : '{}' changed to ' '  ".format(random_value, col,temp ))
     return dataset
 
+
+
 def implicit_missing_value_mean_median_mode(percentage):
     implicit_missing_value_history = []
     number = int((percentage / 100) * (len(dataset) - 1))
-    col = random.randint(0, len(dataset[0]) - 1)
-    # col = dataset[0].index(col_name)
-    col_name=dataset[0][col]
-
-    mod_value = dataset_dataframe_version[col_name].mode()
-    sort_frame = dataset_dataframe_version.sort_values(col_name)
-    size=dataset_dataframe_version.shape[0]
-    index=int(size/2)+1
-    median_value=sort_frame[col_name][index]
-
-    mod_value=list(mod_value.values)[0]
 
 
+    mod_value=[]
+    median_value=[]
+    for i in range(len(dataset[0])):
+
+        col_name = dataset[0][i]
+        mod_value.append( dataset_dataframe_version[col_name].mode()[0])
+        sort_frame = dataset_dataframe_version.sort_values(col_name)
+        size=dataset_dataframe_version.shape[0]
+        index=int(size/2)+1
+        median_value.append(sort_frame[col_name][index])
 
     print("---------Change according to implicit missing value(Median/Mode) method ---------------\n")
     for i in range(number):
@@ -175,9 +180,11 @@ def implicit_missing_value_mean_median_mode(percentage):
         while random_value in implicit_missing_value_history:
             random_value = random.randint(1, len(dataset) - 1)
         implicit_missing_value_history.append(random_value)
-        temp = dataset[random_value][col]
+        col = random.randint(0, len(dataset[0]) - 1)
 
-        col_list=[median_value,mod_value]
+        temp = dataset[random_value][col]
+        col_list=[median_value[col],mod_value[col]]
+
         rand=np.random.randint(0,2)
         selected=col_list[rand]
 
@@ -203,7 +210,7 @@ def random_active_domain(percentage):
     """
     random_active_domain_history = []
     number_row_random = int((percentage / 100) * (len(dataset) - 1))
-    col = random.randint(0, len(dataset[0]) - 1)
+    # col = random.randint(0, len(dataset[0]) - 1)
     # col = dataset[0].index(col_name)
 
     print("---------Change according to Random Active domin method ---------------\n")
@@ -213,7 +220,7 @@ def random_active_domain(percentage):
             random_values_row = random.randint(1, len(dataset) - 1)
         random_active_domain_history.append(random_values_row)
 
-
+        col = random.randint(0, len(dataset[0]) - 1)
         random_value = random.randint(1,len(dataset)-1)
         while (random_value ==random_values_row or dataset[random_values_row][col]== dataset[random_value][col]):
             random_value = random.randint(1, len(dataset) - 1)
@@ -234,15 +241,13 @@ def similar_based_active_domain(percentage):
     """
     similar_based_active_domain_history = []
     number_similar_active_domain = int((percentage / 100) * (len(dataset) - 1))
-    col = random.randint(0, len(dataset[0]) - 1)
-    # col = dataset[0].index(col_name)
+
     print("---------Change according to similar based active domin method ---------------\n")
 
-    temp = []
-    for i in range(len(dataset)):
-        temp.append(dataset[i][col])
-
     for i in range(number_similar_active_domain):
+        col = random.randint(0, len(dataset[0])-1)
+
+
         random_value = random.randint(1, len(dataset) - 1)
         while random_value in similar_based_active_domain_history:
             random_value = random.randint(1, len(dataset) - 1)
@@ -256,15 +261,24 @@ def similar_based_active_domain(percentage):
             similar_based_active_domain_history.append(random_value)
             selected_value = dataset[random_value][col]
 
-        similar = difflib.get_close_matches(selected_value, temp, n=1000, cutoff=0)
+        temp = []
+        for i in range(len(dataset)):
+            temp.append(dataset[i][col])
+
+
+        similar = difflib.get_close_matches(selected_value, temp, n=5000, cutoff=0)
         while selected_value in similar: similar.remove(selected_value)
         if len(similar) == 0:
             print("there is no similar value to '{}' in your requested column".format(selected_value))
+            print("please increase the n in the similar function")
+
 
         else:
             dataset[random_value][col] = similar[0]
             print("row: {} col: {} : '{}' changed to '{}'  ".format(random_value, col, selected_value, similar[0]))
     return dataset
+
+
 
 
 #--------------------------NOISE----------------------------------
@@ -279,7 +293,7 @@ def noise(percentage):
     noise = np.random.normal(mu, sigma, 1)
     noise_history = []
     number = int((percentage / 100) * (len(dataset) - 1))
-    col = random.randint(0, len(dataset[0]) - 1)
+    # col = random.randint(0, len(dataset[0]) - 1)
 
     # col = dataset[0].index(col_name)
     print("---------Change according to noise method ---------------\n")
@@ -288,6 +302,7 @@ def noise(percentage):
         while random_value in noise_history:
             random_value = random.randint(1, len(dataset) - 1)
         noise_history.append(random_value)
+        col = random.randint(0, len(dataset[0]) - 1)
         selected=dataset[random_value][col]
 
         while (len(selected) == 0):
@@ -346,7 +361,7 @@ def noise(percentage):
 def noise_gaussian(percentage,noise_rate):
     implicit_missing_value_history = []
     number = int((percentage / 100) * (len(dataset) - 1))
-    col = random.randint(0, len(dataset[0]) - 1)
+    # col = random.randint(0, len(dataset[0]) - 1)
     # col = dataset[0].index(col_name)
 
 
@@ -356,6 +371,7 @@ def noise_gaussian(percentage,noise_rate):
         while random_value in implicit_missing_value_history:
             random_value = random.randint(1, len(dataset) - 1)
         implicit_missing_value_history.append(random_value)
+        col = random.randint(0, len(dataset[0]) - 1)
         temp = dataset[random_value][col]
 
         while (len(temp) == 0):
@@ -417,14 +433,14 @@ if __name__=="__main__":
     dataset = read_csv_dataset("dataset/address_10_ground_truth.csv")
     # Function(column_name,percentage)
 
+    random_active_domain(1)
+    similar_based_active_domain(1)
+
     typoGenerator(1)
     typoGenerator2(1)
 
     explicit_missing_value(1)
     implicit_missing_value_mean_median_mode(1)
-
-    random_active_domain(1)
-    similar_based_active_domain(1)
 
     noise(1)
     noise_gaussian(1,10) #percentage,noise_rate  #you can specify noise rate in this function
