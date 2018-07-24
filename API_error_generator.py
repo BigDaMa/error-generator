@@ -69,7 +69,7 @@ def typoGenerator(percentage):
     row and colu  mn start from 0 (zero is the hedder)
     """
     typoGenerator_history = []
-    number = int((percentage / 100) * (len(dataset) - 1))
+    number = int((percentage / 100.0) * (len(dataset) - 1))
 
 
     # col=dataset[0].index(col_name)
@@ -101,7 +101,7 @@ def typoGenerator(percentage):
 def typoGenerator2(percentage):
 
     typoGenerator2_history = []
-    number_row = int((percentage / 100) * (len(dataset) - 1))
+    number_row = int((percentage / 100.0) * (len(dataset) - 1))
     # col = random.randint(0, len(dataset[0]) - 1)
     # col = dataset[0].index(col_name)
     print("---------Change according to typoGenrator method(Butterfinger) ---------------\n")
@@ -133,7 +133,7 @@ def explicit_missing_value(percentage):
     this method explicitly remove one value
     """
     explicit_missing_value_history = []
-    number = int((percentage / 100) * (len(dataset) - 1))
+    number = int((percentage / 100.0) * (len(dataset) - 1))
     # col = random.randint(0, len(dataset[0]) - 1)
     # col = dataset[0].index(col_name)
     print("---------Change according to explicit missing value method ---------------\n")
@@ -160,7 +160,7 @@ def explicit_missing_value(percentage):
 
 def implicit_missing_value_mean_median_mode(percentage):
     implicit_missing_value_history = []
-    number = int((percentage / 100) * (len(dataset) - 1))
+    number = int((percentage / 100.0) * (len(dataset) - 1))
 
 
     mod_value=[]
@@ -209,7 +209,7 @@ def random_active_domain(percentage):
     this method randomly change the value with active domain
     """
     random_active_domain_history = []
-    number_row_random = int((percentage / 100) * (len(dataset) - 1))
+    number_row_random = int((percentage / 100.0) * (len(dataset) - 1))
     # col = random.randint(0, len(dataset[0]) - 1)
     # col = dataset[0].index(col_name)
 
@@ -240,7 +240,7 @@ def similar_based_active_domain(percentage):
     this method change the value to most similar one in active domain
     """
     similar_based_active_domain_history = []
-    number_similar_active_domain = int((percentage / 100) * (len(dataset) - 1))
+    number_similar_active_domain = int((percentage / 100.0) * (len(dataset) - 1))
 
     print("---------Change according to similar based active domin method ---------------\n")
 
@@ -292,7 +292,7 @@ def noise(percentage):
     mu, sigma = 0, 1 # mean and standard deviation
     noise = np.random.normal(mu, sigma, 1)
     noise_history = []
-    number = int((percentage / 100) * (len(dataset) - 1))
+    number = int((percentage / 100.0) * (len(dataset) - 1))
     # col = random.randint(0, len(dataset[0]) - 1)
 
     # col = dataset[0].index(col_name)
@@ -360,7 +360,7 @@ def noise(percentage):
 
 def noise_gaussian(percentage,noise_rate):
     implicit_missing_value_history = []
-    number = int((percentage / 100) * (len(dataset) - 1))
+    number = int((percentage / 100.0) * (len(dataset) - 1))
     # col = random.randint(0, len(dataset[0]) - 1)
     # col = dataset[0].index(col_name)
 
@@ -430,10 +430,11 @@ if __name__=="__main__":
 
     #---------------Example one ------------------------
 
-    dataset = read_csv_dataset("dataset/address_10_ground_truth.csv")
+    dataset = read_csv_dataset("dataset/hospital_10k.txt")
     # Function(column_name,percentage)
 
     random_active_domain(1)
+    '''
     similar_based_active_domain(1)
 
     typoGenerator(1)
@@ -444,8 +445,9 @@ if __name__=="__main__":
 
     noise(1)
     noise_gaussian(1,10) #percentage,noise_rate  #you can specify noise rate in this function
+    '''
 
-    write_csv_dataset("output/out.csv",dataset)
+    write_csv_dataset("output/out.csv", dataset)
 
 
 
