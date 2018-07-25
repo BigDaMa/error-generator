@@ -266,12 +266,14 @@ def similar_based_active_domain(percentage):
             temp.append(dataset[i][col])
 
 
-        similar = difflib.get_close_matches(selected_value, temp, n=5000, cutoff=0)
+        similar = difflib.get_close_matches(selected_value, temp, n=1000, cutoff=0)
         while selected_value in similar: similar.remove(selected_value)
         if len(similar) == 0:
-            print("there is no similar value to '{}' in your requested column".format(selected_value))
-            print("please increase the n in the similar function")
-
+            #here we need to pic the value that is not similar to selected value because
+            #the value that picked was uniqe
+            similar = difflib.get_close_matches(selected_value, temp, n=len(dataset), cutoff=0)
+            while selected_value in similar: similar.remove(selected_value)
+            print("row: {} col: {} : '{}' changed to '{}'  ".format(random_value, col, selected_value, similar[0]))
 
         else:
             dataset[random_value][col] = similar[0]
@@ -326,7 +328,11 @@ def noise(percentage):
                 else:
                     code = str(code)
                 asci_number=asci_number+code
+            # if you pass the really large sentence the python can't handel that so we replace that number
+            # with maximum number that python can accept
 
+            if int(asci_number)>sys.maxsize:
+                asci_number=int(sys.maxsize)
             string_noise=int(int(asci_number)*noise[0])
             string_noise=string_noise+int(asci_number)
             string_noise=str(string_noise)
@@ -430,7 +436,11 @@ if __name__=="__main__":
 
     #---------------Example one ------------------------
 
+<<<<<<< HEAD
+    dataset = read_csv_dataset("dataset/hospital_10k.csv")
+=======
     dataset = read_csv_dataset("dataset/hospital_10k.txt")
+>>>>>>> a14d1fc8a8e7d53c1a035e02ea09db1b51489f64
     # Function(column_name,percentage)
 
     random_active_domain(1)
