@@ -158,7 +158,7 @@ def explicit_missing_value(percentage):
 
 
 
-def implicit_missing_value_mean_median_mode(percentage):
+def implicit_missing_value_median_mode(percentage):
     implicit_missing_value_history = []
     number = int((percentage / 100.0) * (len(dataset) - 1))
 
@@ -193,6 +193,9 @@ def implicit_missing_value_mean_median_mode(percentage):
             if col_list is None:
                 selected = median_value + median_value
 
+        if (isinstance(selected, list)):
+            if len(selected)>1:
+                selected=selected[0]
         dataset[random_value][col] = selected
         print("row: {} col: {} : '{}' changed to {}  ".format(random_value, col, temp,selected))
     return dataset
@@ -436,26 +439,22 @@ if __name__=="__main__":
 
     #---------------Example one ------------------------
 
-<<<<<<< HEAD
+
     dataset = read_csv_dataset("dataset/hospital_10k.csv")
-=======
-    dataset = read_csv_dataset("dataset/hospital_10k.txt")
->>>>>>> a14d1fc8a8e7d53c1a035e02ea09db1b51489f64
+
     # Function(column_name,percentage)
 
     random_active_domain(1)
-    '''
     similar_based_active_domain(1)
 
     typoGenerator(1)
     typoGenerator2(1)
 
     explicit_missing_value(1)
-    implicit_missing_value_mean_median_mode(1)
+    implicit_missing_value_median_mode(1)
 
     noise(1)
     noise_gaussian(1,10) #percentage,noise_rate  #you can specify noise rate in this function
-    '''
 
     write_csv_dataset("output/out.csv", dataset)
 
