@@ -440,23 +440,18 @@ if __name__=="__main__":
     #---------------Example one ------------------------
 
 
-    dataset = read_csv_dataset("dataset/hospital_10k.csv")
-
     # Function(column_name,percentage)
 
-    random_active_domain(1)
-    similar_based_active_domain(1)
+    name = 'HOSP'
+    path = "dataset/hospital_10k.csv"
 
-    typoGenerator(1)
-    typoGenerator2(1)
-
-    explicit_missing_value(1)
-    implicit_missing_value_median_mode(1)
-
-    noise(1)
-    noise_gaussian(1,10) #percentage,noise_rate  #you can specify noise rate in this function
-
-    write_csv_dataset("output/out.csv", dataset)
+    for error_gen in [random_active_domain, similar_based_active_domain, typoGenerator, typoGenerator2, explicit_missing_value, implicit_missing_value_median_mode, noise]:
+        for percent in [1, 5, 10]:
+            dataset = read_csv_dataset(path)
+            error_gen(percent)
+            error_type = error_gen.__name__.replace('_','')
+            print(error_type)
+            write_csv_dataset("output/" + str(name) + "_" + str(percent) + "_" + error_type + ".csv", dataset)
 
 
 
