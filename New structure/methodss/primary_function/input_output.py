@@ -1,0 +1,34 @@
+import pandas
+
+
+class read_write():
+    def __init__(self):
+        pass
+
+    def read_csv_dataset(dataset_path, header_exists=True):
+        """
+        The method reads a dataset from a csv file path.
+        """
+        global dataset_dataframe_version
+        dataset_dataframe_version = pandas.read_csv(dataset_path)
+        if header_exists:
+            dataset_dataframe = pandas.read_csv(dataset_path, sep=",", header="infer", encoding="utf-8", dtype=str,
+                                                keep_default_na=False, low_memory=False)
+
+            dataset_dataframe = dataset_dataframe.apply(lambda x: x.str.strip())
+            return [dataset_dataframe.columns.get_values().tolist()] + dataset_dataframe.get_values().tolist()
+        else:
+            dataset_dataframe = pandas.read_csv(dataset_path, sep=",", header=None, encoding="utf-8", dtype=str,
+                                                keep_default_na=False)
+
+            dataset_dataframe = dataset_dataframe.apply(lambda x: x.str.strip())
+            return dataset_dataframe.get_values().tolist()
+
+    def write_csv_dataset(dataset_path, dataset_table):
+        """
+        The method writes a dataset to a csv file path.
+        """
+        dataset_dataframe = pandas.DataFrame(data=dataset_table[1:], columns=dataset_table[0])
+        dataset_dataframe.to_csv(dataset_path, sep=",", header=True, index=False, encoding="utf-8")
+
+
