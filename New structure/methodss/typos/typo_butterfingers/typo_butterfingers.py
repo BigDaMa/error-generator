@@ -1,15 +1,15 @@
-from methodss.primary_function.value_selector import value_selector
+from methodss.primary_function.value_selector import Value_Selector
 from methodss.primary_function import input_output
 from methodss.typos.typo_butterfingers.butterfingers import butterfinger
 
-class typo_butterfingers:
+class Typo_Butterfingers:
     def __init__(self):
         pass
 
     def typo_butterfingers(dataset, percentage):
 
         #create instance from value selector
-        instance_value_selector = value_selector()
+        instance_value_selector = Value_Selector()
 
         # how many cell we should change
         number_change = instance_value_selector.number(dataset, percentage)

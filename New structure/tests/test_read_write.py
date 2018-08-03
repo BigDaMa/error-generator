@@ -1,5 +1,5 @@
 
-from methodss.primary_function import input_output
+from methodss.primary_function.input_output import Read_Write
 
 
  
@@ -9,8 +9,8 @@ class test(object):
         self.name=name
     
     
-dataset = input_output.read_write.read_csv_dataset("/home/milad/Desktop/error-generator/dataset/address_10_ground_truth.csv")
-input_output.read_write.write_csv_dataset("/home/milad/Desktop/error-generator/New structure/outputs/address_{}.csv".format(test().name),dataset)
+dataset,dataframe = Read_Write.read_csv_dataset("../datasets/test.csv")
+Read_Write.write_csv_dataset("../outputs/address_{}.csv".format(test().name),dataset)
 print(dataset)
     
     

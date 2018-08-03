@@ -1,6 +1,6 @@
 import random
 
-class value_selector(object):
+class Value_Selector(object):
     def __init__(self):
         self.value_selector_history=[]
         self.picked_value=[]
@@ -27,3 +27,4 @@ class value_selector(object):
                 input_value = dataset[random_value][col]
             self.picked_value.append([random_value,col,input_value])
         return self.picked_value
+

@@ -1,7 +1,7 @@
 import pandas
 
 
-class read_write():
+class Read_Write():
     def __init__(self):
         pass
 
@@ -9,20 +9,20 @@ class read_write():
         """
         The method reads a dataset from a csv file path.
         """
-        global dataset_dataframe_version
+
         dataset_dataframe_version = pandas.read_csv(dataset_path)
         if header_exists:
             dataset_dataframe = pandas.read_csv(dataset_path, sep=",", header="infer", encoding="utf-8", dtype=str,
                                                 keep_default_na=False, low_memory=False)
 
             dataset_dataframe = dataset_dataframe.apply(lambda x: x.str.strip())
-            return [dataset_dataframe.columns.get_values().tolist()] + dataset_dataframe.get_values().tolist()
+            return [dataset_dataframe.columns.get_values().tolist()] + dataset_dataframe.get_values().tolist(),dataset_dataframe_version
         else:
             dataset_dataframe = pandas.read_csv(dataset_path, sep=",", header=None, encoding="utf-8", dtype=str,
                                                 keep_default_na=False)
 
             dataset_dataframe = dataset_dataframe.apply(lambda x: x.str.strip())
-            return dataset_dataframe.get_values().tolist()
+            return dataset_dataframe.get_values().tolist(),dataset_dataframe_version
 
     def write_csv_dataset(dataset_path, dataset_table):
         """
