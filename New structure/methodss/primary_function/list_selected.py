@@ -1,9 +1,9 @@
 from methodss.primary_function.value_selector import Value_Selector
 
-class List_selected(object):
+class List_selected:
     def __init__(self):
         pass
-    def list_selected(dataset, percentage):
+    def list_selected(self,dataset, percentage):
         # create instance from value selector
         instance_value_selector = Value_Selector()
 

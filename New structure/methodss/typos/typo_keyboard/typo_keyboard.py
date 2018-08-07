@@ -1,15 +1,15 @@
-from methodss.primary_function.list_selected import List_selected
-from methodss.primary_function.apply_function import Apply_Function
-
-class Typo_Keyboard:
-    def __init__(self):
-        pass
-
-    def typo_keyboard(dataset,percentage):
+from random import *
+w=choice
+o=ord
 
 
-        list_selected_value,number_change=List_selected.list_selected(dataset,percentage)
+class Typo_Keyboard(object):
+    def __init__(self,name="Typo_Keyboard"):
+        self.name=name
+        
+    def run(self,row,col,selected_value,dataset):
+        temp = "".join(w([z] * 0 + [w(["", z * 2] + [chr(o(w(
+            "DGRC FHTV GJYB UOK HKUN JLIM KO NK BMJ IPL O WA ETF ADWZ RYG YIJ CBG QES ZCD TUH XS SQ VNH XVF SFEX WRD".split()[
+                (o(z) & 31) - 6])) | o(z) & 32)] * z.isalpha())]) for z in selected_value)
 
-        print("---------Change according to typoGenrator method ---------------\n")
-        dataset=Apply_Function.apply_function(number_change=number_change,list_selected_value=list_selected_value,method="typo_keyboard",dataset=dataset)
-        return dataset
+        return temp

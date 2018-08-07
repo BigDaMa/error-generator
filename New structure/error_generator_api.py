@@ -1,19 +1,14 @@
-from methodss.typos.typo_keyboard.typo_keyboard import Typo_Keyboard
-from methodss.primary_function.input_output import Read_Write
+from methodss.primary_function.apply_function import Apply_Function
 
-def error_generator(method,selector,percentage,dataset):
-    """
-    selector is a list that user should specify the type of that for example [full_selector] or [col,1,3]
+class Error_Generator:
 
-    now it only work with full selector
+    def error_generator(self, method_gen,selector,percentage,dataset):
 
-    """
-    if method == "typo_keyboard":
-        Typo_Keyboard.typo_keyboard(dataset,percentage)
+       
+        list_selected_value, number_change =selector.list_selected(dataset,percentage)
+
+        dataset = Apply_Function.apply_function(self,number_change=number_change, list_selected_value=list_selected_value,method=method_gen, dataset=dataset)
+        return dataset
 
 
-#-------------------------------------------------------------------------it can be seprate file or class
 
-dataset,dataframe = Read_Write.read_csv_dataset("./datasets/test.csv")
-
-error_generator(method="typo_keyboard",selector="Not important now",percentage=20,dataset=dataset)

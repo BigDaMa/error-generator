@@ -1,23 +1,35 @@
 from methodss.primary_function.input_output import Read_Write
 from methodss.typos.typo_butterfingers.typo_butterfingers import Typo_Butterfingers
+from error_generator_api import Error_Generator
+from methodss.primary_function.list_selected import List_selected
 
-class Test_Typo_Butterfingers(object):
-    def __init__(self, name="test_typobutterfingers"):
+
+class Test_Typo_butterfingers(object):
+    def __init__(self, name="test_typo_butterfingers"):
         self.name = name
 
-# ------------------------------- this is your part ----------------------------------
 
 
 
-#create instance of test
-inst_test=Test_Typo_Butterfingers()
 
-#load data set
+# ------------------------------- this is test part ----------------------------------
+
+
 dataset,dataframe = Read_Write.read_csv_dataset("../datasets/test.csv")
 
-#apply method
-instance_typo=Typo_Butterfingers
-new_dataset=instance_typo.typo_butterfingers(dataset=dataset,percentage=20)
+mymethod=Typo_Butterfingers()
+
+
+myselector=List_selected()
+
+
+mygen=Error_Generator()
+new_dataset=mygen.error_generator(method_gen=mymethod,selector=myselector,percentage=20,dataset=dataset)
+
+
+# #create instance of test
+inst_test=Test_Typo_butterfingers()
+
 
 #write to output
 Read_Write.write_csv_dataset("../outputs/{}.csv".format(inst_test.name), new_dataset)
