@@ -26,12 +26,34 @@ in the following, you can find the list of the ways that you can inject your dat
     in this method, you can specify the noise rate as well.
     
 # Installation
-this project is a python program that should run it over your dataset for injecting your data.
-All of the methods have their own function that you should call them and give the function (percentage) you wish for injection.
+run the following command in the project directory.
+this command installs all packages that the error generator need them for its job.
+```
+python setup.py install
+```
 
-# Example
-the list of functions and examples can find under API_error_generator.py
+# Application
+this project has python interface that helps the user to run it over dataset for injecting the data.
 
+in the ``` user_interface.py ``` you can specify the method that has been explained above and the selector for selecting the columns and cells.
+
+# Example & test
+
+for using the methods of error generator is needed to make an instance of the methods and selectors and feed the error_generator with them.
+``` 
+mymethod=one_of_the_methods()
+myselector=one_of_the_selectors()
+```
+```
+mygen=Error_Generator()
+new_dataset=mygen.error_generator(method_gen=mymethod,selector=myselector,percentage=50,dataset=dataset)
+```
+in the end, you can save the output in the .csv format in the output folder.
+
+```
+Read_Write.write_csv_dataset("./outputs/{}.csv".format(mymethod.name), new_dataset)
+```
+for more explanation and test of each methods please check the test folder
 
 # output 
 the dirty dataset will create in out folder
