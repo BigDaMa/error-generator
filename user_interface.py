@@ -6,6 +6,7 @@ from methodss.noise.white_noise.white_noise import White_Noise
 from methodss.noise.gaussian_noise.gaussian_noise import Gaussian_Noise
 from methodss.missing_value.implicit_missing_value.implicit_missing_value import Implicit_Missing_Value
 from methodss.missing_value.explicit_missing_value.explicit_missing_value import Explicit_Missing_Value
+from methodss.word2vec.word2vec_nearest_neighbor.word2vec_nearest_neighbor import Word2vec_Nearest_Neighbor
 from methodss.primary_function.input_output import Read_Write
 from methodss.primary_function.list_selected import List_selected
 from error_generator_api import Error_Generator
@@ -25,8 +26,9 @@ dataset,dataframe = Read_Write.read_csv_dataset("./datasets/test.csv")
 # mymethod=Gaussian_Noise()
 
 # mymethod=Implicit_Missing_Value()
-mymethod=Explicit_Missing_Value()
+# mymethod=Explicit_Missing_Value()
 
+mymethod=Word2vec_Nearest_Neighbor()
 
 myselector=List_selected()
 

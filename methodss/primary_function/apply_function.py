@@ -1,13 +1,9 @@
-from methodss.typos.typo_keyboard.typo_keyboard import Typo_Keyboard
-from methodss.typos.typo_butterfingers.typo_butterfingers import Typo_Butterfingers
-
 class Apply_Function(object):
     def __init__(self):
         pass
     def apply_function(self,number_change,list_selected_value,method,dataset):
         print("---------Change according to {} method ---------------\n".format(method.name))
-        
-        
+
         for i in range(number_change):
             
             #run(row,col,value,dataset)
