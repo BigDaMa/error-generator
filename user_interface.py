@@ -15,7 +15,7 @@ from error_generator_api import Error_Generator
 dataset,dataframe = Read_Write.read_csv_dataset("./datasets/test.csv")
 
 # mymethod=Typo_Keyboard()
-# mymethod=Typo_Butterfingers()
+mymethod=Typo_Butterfingers()
 
 
 # mymethod=Similar_Based_Active_Domain()
@@ -28,7 +28,7 @@ dataset,dataframe = Read_Write.read_csv_dataset("./datasets/test.csv")
 # mymethod=Implicit_Missing_Value()
 # mymethod=Explicit_Missing_Value()
 
-mymethod=Word2vec_Nearest_Neighbor()
+#mymethod=Word2vec_Nearest_Neighbor()
 
 myselector=List_selected()
 
