@@ -9,13 +9,16 @@ class Value_Selector(object):
         number = int((percentage / 100.0) * (len(dataset) ))
         return number
     
-    def select_value(self,dataset,number):
+    def select_value(self,dataset,number,mute_column):
         for i in range(number):
             random_value = random.randint(1, len(dataset) - 1)
             while random_value in self.value_selector_history:
                 random_value = random.randint(1, len(dataset) - 1)
             self.value_selector_history.append(random_value)
+
             col = random.randint(0, len(dataset[0]) - 1)
+            while col in mute_column:
+                col = random.randint(0, len(dataset[0]) - 1)
 
             input_value = dataset[random_value][col]
 

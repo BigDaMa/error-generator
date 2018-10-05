@@ -15,7 +15,7 @@ from error_generator_api import Error_Generator
 dataset,dataframe = Read_Write.read_csv_dataset("./datasets/test.csv")
 
 # mymethod=Typo_Keyboard()
-mymethod=Typo_Butterfingers()
+# mymethod=Typo_Butterfingers()
 
 
 # mymethod=Similar_Based_Active_Domain()
@@ -25,7 +25,7 @@ mymethod=Typo_Butterfingers()
 # mymethod=White_Noise()
 # mymethod=Gaussian_Noise()
 
-# mymethod=Implicit_Missing_Value()
+mymethod=Implicit_Missing_Value()
 # mymethod=Explicit_Missing_Value()
 
 #mymethod=Word2vec_Nearest_Neighbor()
@@ -33,7 +33,7 @@ mymethod=Typo_Butterfingers()
 myselector=List_selected()
 
 mygen=Error_Generator()
-new_dataset=mygen.error_generator(method_gen=mymethod,selector=myselector,percentage=50,dataset=dataset)
+new_dataset=mygen.error_generator(method_gen=mymethod,selector=myselector,percentage=50,dataset=dataset,mute_column=[1,2])
 
 # write to output
 Read_Write.write_csv_dataset("./outputs/{}.csv".format(mymethod.name), new_dataset)
