@@ -11,7 +11,9 @@ class Implicit_Missing_Value(object):
     def __init__(self,name="Implicit_Missing_Value"):
         self.name=name
         self.dic={"phone number":"11111111","education":"Some college","Blood Pressurse":"0",
-                  "workclass":"?","date":"20010101","Ref_ID":"-1","Regents Num":"s","Junction Control":"-1"}
+                  "workclass":"?","date":"20010101","Ref_ID":"-1","Regents Num":"s","Junction Control":"-1",
+                  "age":"0","Birthday":"20010101","EVENT_DT":"20030101","state":"Alabama","country":"Afghanistan",
+                  "email":"...@gmail.com","ssn":"111111111"}
 
 
     def run(self,row,col,selected_value,dataset):
@@ -53,6 +55,6 @@ class Implicit_Missing_Value(object):
         if max_match_key[0]>0.3:
             selected = self.dic[str(max_match_key[1])]
         else:
-            selected = "Not Specify"
+            selected = "N/A"
 
         return selected
