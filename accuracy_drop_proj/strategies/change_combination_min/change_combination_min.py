@@ -1,0 +1,81 @@
+import numpy as np
+from accuracy_drop_proj.strategies.change_combination.change_combination import Change_Combination
+
+
+#check all possible combination and then change the minimum one
+# e.g first rows that require only one change for changing the target and then rows by two feature and so on
+class Change_Combination_Min(object):
+    def __init__(self):
+        pass
+
+    def change(self,x_train, y_train, percetage, mnb, change_plan): #check_combination_change_plan_probability
+        number_change_requested = int(percetage / 100 * x_train.shape[0])
+        print("{} percentage error is equal to {} change \n".format(percetage, number_change_requested))
+
+        used_row = []
+        occurred_change = 0
+        all_changed = 1
+        change_done = False
+        x_train_changed = np.copy(x_train)
+        possible_changes = {}  # key: number of changes value:[row,[columns should change]]
+
+        for i in range(len(change_plan["key"])):
+
+            occurred_change = 0
+            indices = [t for t, x in enumerate(y_train) if x == change_plan["key"][i][0]]
+            possible_changes = {x: [] for x in range(len(x_train[0]) + 1)}
+            print("{} rows have target {} \n".format(len(indices), change_plan["key"][i][0]))
+
+            for p in range(len(indices)):
+
+                if y_train[indices[p]] == mnb.predict([x_train[indices[p]]]) and indices[p] not in used_row:
+                    change_done = False
+                    for L in range(0, len(x_train_changed[indices[p]]) + 1):
+                        if change_done:
+                            break
+                        else:
+                            for subset in Change_Combination.combinations_index(self,x_train_changed[indices[p]], L):
+                                if not subset:
+                                    pass
+                                else:
+
+                                    x_train_changed[indices[p]][subset] = 0
+
+                                    if (change_plan["key"][i][1] == mnb.predict([x_train_changed[indices[p]]])[0]):
+                                        possible_changes[len(subset)].append([indices[p], subset])
+                                        change_done = True
+                                        x_train_changed[indices[p]] = np.copy(x_train[indices[p]])
+                                        break
+                                    else:
+                                        x_train_changed[indices[p]] = np.copy(x_train[indices[p]])
+
+            if (all(value == [] for value in possible_changes.values())):
+                print("part of your request not possible!")
+                break
+
+            for key in sorted(possible_changes):
+                if (occurred_change == change_plan["number"][i]):
+                    break
+                print("there are {} candidate for changing target with change {} features".format(
+                    len(possible_changes[key]), key))
+                variable = possible_changes[key]
+                for t in range(len(variable)):
+
+                    print(x_train[variable[t][0]], mnb.predict([x_train[variable[t][0]]])[0])
+
+                    x_train_changed[variable[t][0]][variable[t][1]] = 0
+                    print(x_train_changed[variable[t][0]], mnb.predict([x_train_changed[variable[t][0]]])[0])
+                    print(" \n change number {} \n".format(all_changed))
+                    used_row.append(variable[t][0])
+                    occurred_change = occurred_change + 1
+                    all_changed = all_changed + 1
+                    if (occurred_change == change_plan["number"][i]):
+                        print("part of your request has been done :)")
+                        break
+
+        if (all_changed <= number_change_requested):
+            print("your request doesn't complete! please change your plan")
+        else:
+            print("your request is done :)")
+        return np.copy(x_train_changed)
+
