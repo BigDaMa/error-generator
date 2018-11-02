@@ -1,10 +1,11 @@
 import numpy as np
 from accuracy_drop_proj.strategies.change_combination.change_combination import Change_Combination
+import matplotlib.pyplot as plt; plt.rcdefaults()
 
 
 #check all possible combination and then change the minimum one
 # e.g first rows that require only one change for changing the target and then rows by two feature and so on
-class Change_Combination_Min(object):
+class Change_Combination_Min(object):#base rows
     def __init__(self):
         pass
 
@@ -17,7 +18,7 @@ class Change_Combination_Min(object):
         all_changed = 1
         change_done = False
         x_train_changed = np.copy(x_train)
-        possible_changes = {}  # key: number of changes value:[row,[columns should change]]
+        possible_changes = {}  # key: number of changes and  value:[row,[columns should change]]
 
         for i in range(len(change_plan["key"])):
 
@@ -72,6 +73,28 @@ class Change_Combination_Min(object):
                     if (occurred_change == change_plan["number"][i]):
                         print("part of your request has been done :)")
                         break
+
+            #plotting
+
+            print("----plotting----")
+            x_pos = (range(0, len(x_train_changed[indices[p]]) + 1))
+            y_pos = np.arange(len(x_train_changed[indices[p]]) + 1)
+            chart_freq=[]
+            print("number of feature,how many changes is possible")
+            for key, value in possible_changes.items():
+                print(key, len([item for item in value if item]))
+                chart_freq.append(len([item for item in value if item]))
+
+            fig = plt.figure()
+            outputFile = "./fig_output/change_combination_min/request{}.png".format(i)
+            plt.bar(y_pos, chart_freq, align='center', alpha=0.5)
+            plt.xticks(y_pos, x_pos)
+            plt.ylabel('frequency')
+            plt.xlabel('with changing X feature you can change target')
+            plt.title('Summary of your request for change target {}'.format(change_plan['key'][i]))
+            fig.savefig(outputFile)
+
+
 
         if (all_changed <= number_change_requested):
             print("your request doesn't complete! please change your plan")
