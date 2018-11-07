@@ -2,6 +2,7 @@ import numpy as np
 from accuracy_drop_proj.strategies.change_combination.change_combination import Change_Combination
 # for each combination (from len1 to n) check the target changes
 #e.g first check all row that can change them only with changing one feature then two feature and so on
+#algorithm 2
 class Change_Combination_Feature_Min(object):
     def __init__(self):
         pass

@@ -28,6 +28,23 @@ class Change_Combination(object):
             for j in range(i + 1, r):
                 indices[j] = indices[j - 1] + 1
             yield list(indices)
+    '''
+    
+    you can use this function when you would like to do Brute-force and check which label(target) can chenge to which label(target)
+    then only need to write down the all possible case in the change plan.
+    for this you should only provide the combination and number of change isn't important
+    for example if you have 3 target you should provide 
+    
+    change_plan={"key":[[0, 1], [0, 2], [1, 0], [1, 2], [2, 0], [2, 1]]}
+    
+    simple code for make the change plan:
+    x=[]
+    for i in range(10):
+        for j in range(10):
+            if i!=j:
+                x.append([i,j])
+    print (x)
+    '''
 
     def check_all_combination(self,x_train, y_train, percetage, mnb, change_plan):
         number_change_requested = int(percetage / 100 * x_train.shape[0])

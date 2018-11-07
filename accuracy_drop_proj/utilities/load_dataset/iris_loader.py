@@ -3,6 +3,7 @@ from sklearn.model_selection import train_test_split
 
 class Iris_Loader(object):
     def __init__(self):
+        self.name ="Iris_Loader"
         pass
 
     def load(self):

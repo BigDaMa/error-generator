@@ -5,6 +5,7 @@ from sklearn.model_selection import train_test_split
 
 class Digits_Loader(object):
     def __init__(self):
+        self.name = "Digits_Loader"
         pass
     def load(self):
         

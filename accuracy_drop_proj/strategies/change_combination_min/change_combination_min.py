@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt; plt.rcdefaults()
 
 #check all possible combination and then change the minimum one
 # e.g first rows that require only one change for changing the target and then rows by two feature and so on
+#algorithm 1
 class Change_Combination_Min(object):#base rows
     def __init__(self):
         pass
