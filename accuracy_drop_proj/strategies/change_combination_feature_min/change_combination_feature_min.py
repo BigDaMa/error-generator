@@ -11,7 +11,8 @@ class Change_Combination_Feature_Min(object):
         number_change_requested = int(percetage / 100 * x_train.shape[0])
         print("{} percentage error is equal to {} change \n".format(percetage, number_change_requested))
 
-        used_row = []
+
+        used_row ={}
         occurred_change = 0
         all_changed = 1
 
@@ -48,7 +49,7 @@ class Change_Combination_Feature_Min(object):
                                     print(x_train_changed[indices[p]], mnb.predict([x_train_changed[indices[p]]])[0])
 
                                     print(" \n change number {} \n".format(all_changed))
-                                    used_row.append(indices[p])
+                                    used_row.update({indices[p]:indices[p]})
                                     occurred_change = occurred_change + 1
                                     all_changed = all_changed + 1
 
@@ -64,5 +65,7 @@ class Change_Combination_Feature_Min(object):
             print("your request doesn't complete! please change your plan")
         else:
             print("your request is done :)")
+
+
         return np.copy(x_train_changed)
 

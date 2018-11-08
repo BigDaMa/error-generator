@@ -10,7 +10,7 @@ class Change_Feature_randomly(object):
     def change(self,x_train, y_train, percetage, mnb, change_plan):
         number_change_requested = int(percetage / 100 * x_train.shape[0])
         print("{} percentage error is equal to {} change \n".format(percetage, number_change_requested))
-        used_row = []
+        used_row = {}
         col_history = []
         occurred_change = 0
         all_changed = 1
@@ -21,7 +21,7 @@ class Change_Feature_randomly(object):
             indices = [t for t, x in enumerate(y_train) if x == change_plan["key"][i][0]]
 
             for p in range(len(indices)):
-                if y_train[indices[p]] == mnb.predict([x_train[indices[p]]]):
+                if y_train[indices[p]] == mnb.predict([x_train[indices[p]]]) and indices[p] not in used_row:
 
                     while (len(col_history) <= x_train.shape[1]):  # range 4
                         col = random.randint(0, x_train.shape[1] - 1)
@@ -42,7 +42,7 @@ class Change_Feature_randomly(object):
                             print(x_train[indices[p]], mnb.predict([x_train[indices[p]]])[0])
                             print(x_train_changed[indices[p]], mnb.predict([x_train_changed[indices[p]]])[0])
                             print(" \n change number {} \n".format(all_changed))
-
+                            used_row.update({indices[p]: indices[p]})
                             occurred_change = occurred_change + 1
                             all_changed = all_changed + 1
                             col_history = []

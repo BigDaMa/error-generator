@@ -50,7 +50,8 @@ class Change_Combination(object):
         number_change_requested = int(percetage / 100 * x_train.shape[0])
         print("{} percentage error is equal to {} change \n".format(percetage, number_change_requested))
 
-        used_row = []
+
+        used_row ={}
         occurred_change = 0
         all_changed = 1
         change_done = False
@@ -88,7 +89,8 @@ class Change_Combination(object):
                                               mnb.predict([x_train_changed[indices[p]]])[0])
                                         print(" \n change number {} \n".format(all_changed))
 
-                                        used_row.append(indices[p])
+
+                                        used_row.update({indices[p]: indices[p]})
                                         occurred_change = occurred_change + 1
                                         change_done = True
                                         all_changed = all_changed + 1
@@ -105,7 +107,7 @@ class Change_Combination(object):
         number_change_requested = int(percetage / 100 * x_train.shape[0])
         print("{} percentage error is equal to {} change \n".format(percetage, number_change_requested))
 
-        used_row = []
+        used_row ={}
         occurred_change = 0
         all_changed = 1
         change_done = False
@@ -147,7 +149,8 @@ class Change_Combination(object):
                                               mnb.predict([x_train_changed[indices[p]]])[0])
                                         print(" \n change number {} \n".format(all_changed))
 
-                                        used_row.append(indices[p])
+
+                                        used_row.update({indices[p]: indices[p]})
                                         occurred_change = occurred_change + 1
                                         change_done = True
                                         all_changed = all_changed + 1

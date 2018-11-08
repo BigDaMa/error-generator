@@ -14,7 +14,8 @@ class Change_Combination_Min(object):#base rows
         number_change_requested = int(percetage / 100 * x_train.shape[0])
         print("{} percentage error is equal to {} change \n".format(percetage, number_change_requested))
 
-        used_row = []
+
+        used_row={}
         occurred_change = 0
         all_changed = 1
         change_done = False
@@ -68,7 +69,7 @@ class Change_Combination_Min(object):#base rows
                     x_train_changed[variable[t][0]][variable[t][1]] = 0
                     print(x_train_changed[variable[t][0]], mnb.predict([x_train_changed[variable[t][0]]])[0])
                     print(" \n change number {} \n".format(all_changed))
-                    used_row.append(variable[t][0])
+                    used_row.update({variable[t][0]:variable[t][0]})
                     occurred_change = occurred_change + 1
                     all_changed = all_changed + 1
                     if (occurred_change == change_plan["number"][i]):
@@ -87,7 +88,7 @@ class Change_Combination_Min(object):#base rows
                 chart_freq.append(len([item for item in value if item]))
 
             fig = plt.figure()
-            outputFile = "./fig_output/change_combination_min/request{}.png".format(i)
+            outputFile = "./outputs/fig_output/change_combination_min/request{}.png".format(i)
             plt.bar(y_pos, chart_freq, align='center', alpha=0.5)
             plt.xticks(y_pos, x_pos)
             plt.ylabel('frequency')
@@ -101,5 +102,7 @@ class Change_Combination_Min(object):#base rows
             print("your request doesn't complete! please change your plan")
         else:
             print("your request is done :)")
+
+
         return np.copy(x_train_changed)
 

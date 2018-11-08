@@ -11,7 +11,7 @@ class Change_Feature_One_By_One(object):
         number_change = int(percetage / 100 * x_train.shape[0])
 
         x_train_changed = np.copy(x_train)
-        row_history = []
+        row_history = {}
         try_times = 0
         occurred_change = 0
         change_done = False
@@ -25,8 +25,7 @@ class Change_Feature_One_By_One(object):
                     # find uniqe row & as same as user request
                     row = random.randint(1, x_train.shape[0] - 1)
                     try_times = 0
-                    while (mnb.predict([x_train[row]])[0] != change_plan["key"][i][
-                        0] or row in row_history):  # row in row_history or
+                    while (mnb.predict([x_train[row]])[0] != change_plan["key"][i][0] or row in row_history):  # row in row_history or
 
                         row = random.randint(1, x_train.shape[0] - 1)
                         if try_times > len(y_train):
@@ -38,7 +37,7 @@ class Change_Feature_One_By_One(object):
                         print("part of your request can't run")
                         break
 
-                    row_history.append(row)
+                    row_history.update({row:row})
 
                     for ii in range(x_train.shape[1]):  # range(4)
                         x_train_changed[row][ii] = 0
