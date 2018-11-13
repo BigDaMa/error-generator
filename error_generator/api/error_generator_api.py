@@ -1,4 +1,5 @@
-from methodss.primary_function.apply_function import Apply_Function
+from error_generator.strategies.utilities.apply_function import Apply_Function
+
 
 class Error_Generator:
 

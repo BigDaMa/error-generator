@@ -29,13 +29,13 @@ class Change_Most_Important_Feature(object):
                    floating=False,
                    verbose=2,
                    scoring='accuracy',
-                   cv=0)
+                   cv=5)
         pipe = make_pipeline(StandardScaler(), sfs)
         pipe.fit(x_train, y_train)
 
         #-------------plotting------------------
-        # fig = plot_sfs(sfs.get_metric_dict(), kind='std_err')
-        # plt.show()
+        fig = plot_sfs(sfs.get_metric_dict(), kind='std_err')
+        plt.show()
 
         #get future of the sfs order and only change them.
         x_train_changed = np.copy(x_train)

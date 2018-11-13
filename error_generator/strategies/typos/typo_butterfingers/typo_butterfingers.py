@@ -1,5 +1,5 @@
-from methodss.typos.typo_butterfingers.butterfingers import butterfinger
 
+from error_generator.strategies.typos.typo_butterfingers.butterfingers import butterfinger
 
 
 class Typo_Butterfingers(object):

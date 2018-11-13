@@ -1,5 +1,5 @@
+from error_generator.strategies.utilities.input_output import Read_Write
 
-from methodss.primary_function.input_output import Read_Write
 
 
  

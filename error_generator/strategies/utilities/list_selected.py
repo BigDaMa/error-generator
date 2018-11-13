@@ -1,4 +1,4 @@
-from methodss.primary_function.value_selector import Value_Selector
+from error_generator.strategies.utilities.value_selector import Value_Selector
 
 class List_selected:
     def __init__(self):

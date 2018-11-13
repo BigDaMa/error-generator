@@ -1,7 +1,8 @@
-from methodss.primary_function.input_output import Read_Write
-from methodss.switch_value.Similar_based_active_domain.similar_based_active_domain import Similar_Based_Active_Domain
-from error_generator_api import Error_Generator
-from methodss.primary_function.list_selected import List_selected
+from error_generator.api.error_generator_api import Error_Generator
+from error_generator.strategies.utilities.input_output import Read_Write
+from error_generator.strategies.utilities.list_selected import List_selected
+from error_generator.strategies.switch_value.Similar_based_active_domain.similar_based_active_domain import \
+    Similar_Based_Active_Domain
 
 
 class Test_Similar_Based_Active_Domain(object):
@@ -24,7 +25,7 @@ myselector=List_selected()
 
 
 mygen=Error_Generator()
-new_dataset=mygen.error_generator(method_gen=mymethod,selector=myselector,percentage=20,dataset=dataset)
+new_dataset=mygen.error_generator(method_gen=mymethod,selector=myselector,percentage=20,dataset=dataset,mute_column=[])
 
 
 # #create instance of test

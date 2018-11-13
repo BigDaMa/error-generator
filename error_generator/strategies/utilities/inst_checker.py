@@ -6,7 +6,7 @@ import statistics
 import numpy as np
 from collections import Counter
 import urllib
-
+import urllib.request
 
 class Factory(object):
     def __init__(self):
@@ -25,7 +25,7 @@ class Factory(object):
     def get_class(self,input_class,dataset):
         download = Download()
         if not (self.called) and type(download) is type(input_class):
-           download.download("wiki-news-300d-1M.vec.zip","https://s3-us-west-1.amazonaws.com/fasttext-vectors/",681808098)
+           download.download("wiki-news-300d-1M.vec.zip","https://s3-us-west-1.amazonaws.com/fasttext-vectors/wiki-news-300d-1M.vec.zip",681808098)
            self.called = True
 
 
@@ -33,20 +33,31 @@ class Download(object):
 
     def download(self,filename, url, expected_bytes):
         """Download a file if not present, and make sure it's the right size."""
-        if not os.path.exists("./wiki-news-300d-1M.vec.zip"):
-            filename, _ = urllib.request.urlretrieve(url + filename, filename)
+
+        if not os.path.exists("../../datasets/wiki-news-300d-1M.vec.zip"):
+            print("the required file doesn't exist in datasets folder so the system wants to download it for you")
+            print("System try to download the wiki-news-300d-1M.vec.zip and put it in datasets folder")
+            print("https://s3-us-west-1.amazonaws.com/fasttext-vectors/wiki-news-300d-1M.vec.zip")
+            print("Downloading ...")
+            filename, _ = urllib.request.urlretrieve(url , "../../datasets/"+filename)
+            print("your download is finished")
+
         statinfo = os.stat(filename)
         if statinfo.st_size == expected_bytes:
-            print('Found and verified', filename)
+            print('The required file found and verified', filename)
 
-            if not os.path.exists("./datasets/wiki-news-300d-1M.vec"):
-                zip_ref = zipfile.ZipFile("./wiki-news-300d-1M.vec.zip", 'r')
-                zip_ref.extractall("./datasets")
+            if not os.path.exists("../../datasets/wiki-news-300d-1M.vec"):
+                print("Unzipping ...")
+                zip_ref = zipfile.ZipFile("../../datasets/wiki-news-300d-1M.vec.zip", 'r')
+                zip_ref.extractall("../../datasets")
                 zip_ref.close()
+                print("Unziping is finished")
         else:
             print(statinfo.st_size)
+            print("https://s3-us-west-1.amazonaws.com/fasttext-vectors/wiki-news-300d-1M.vec.zip")
             raise Exception(
                 'Failed to verify ' + filename + '. Can you get to it with a browser?')
+
         return filename
 
 
@@ -54,7 +65,7 @@ class Download(object):
 class Load(object):
     def load(self):
         # Creating the model
-        self.en_model = KeyedVectors.load_word2vec_format('./datasets/wiki-news-300d-1M.vec')
+        self.en_model = KeyedVectors.load_word2vec_format('../../datasets/wiki-news-300d-1M.vec')
 
         # Getting the tokens
         words = []

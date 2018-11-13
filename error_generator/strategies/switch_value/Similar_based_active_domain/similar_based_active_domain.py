@@ -1,8 +1,8 @@
-from methodss.primary_function.value_selector import Value_Selector
-import random
 import difflib
-from methodss.primary_function.inst_checker import Factory
-from methodss.primary_function.inst_checker import Similar_First
+from error_generator.strategies.utilities.inst_checker import Factory
+from error_generator.strategies.utilities.inst_checker import Similar_First
+
+
 class Similar_Based_Active_Domain(object):
     def __init__(self,name="similar_based_active_domain"):
         self.name=name

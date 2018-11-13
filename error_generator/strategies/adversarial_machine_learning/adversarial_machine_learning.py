@@ -1,6 +1,6 @@
 import pandas as pd
-from methodss.typos.typo_butterfingers.butterfingers import butterfinger
 
+from error_generator.strategies import butterfinger
 
 #just for test
 #all spams now have typo
