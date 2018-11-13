@@ -1,0 +1,22 @@
+\section{Problem Statement}
+\label{sec:problem}
+
+The goal of our algorithm is to detect errors in a relational, structured dataset~$D$ by letting the user progressively label attribute values as erroneous or correct.
+We denote $D = \{t_{1}, t_{2}, ..., t_{N}\}$ as a dataset of size~$N$, where each $t_{i}$ represents a tuple. 
+Let $A = \{a_{1}, a_{2}, ..., a_{M}\}$ be the schema with attributes~$a_{j}$. Then, $D[i, j]$ represents the cell value of the attribute~$a_{j}$ in the tuple~$t_{i}$.
+We denote $D_{C}$ as the cleaned version of $D$ representing the ground truth. 
+Thus, we define an error as any cell value~$D[i, j]$ that deviates from its ground truth value~$D_{C}[i, j]$. 
+This error definition is common in error detection research \cite{rekatsinas2017holoclean,abedjan2016detecting}.
+
+Our goal is to formulate the problem of error detection as a classification task. 
+Therefore, the first problem is to identify the right feature representation $\rho$, which maps each cell~$D[i, j]$ to a numerical feature vector.
+Using this feature representation $\rho$, for each column~$D[:,j]$, we train a model $\phi_{j}$ that learns to classify whether a cell value~$D[i, j]$ is erroneous or correct.
+The second problem that we want to solve is, given a user-defined labeling budget~$L$, to choose the optimal training set for each column~$D[:,j]$ to maximize the $F_{1}$-score on the whole dataset~$D$. The error detection $F_{1}$-score is defined as 
+
+\begin{equation} \label{equation:problem2}
+	F_1 = 2 \times (P \times R) /(P + R),
+\end{equation}
+
+where the precision~(P) is the fraction of cells that are correctly detected as errors and the recall~(R) is the fraction of the actual errors that are discovered.
+
+To address the two mentioned problems, we have to design a fitting sampling strategy and identify the appropriate set of features. Our approach does not require additional user-defined configuration, such as user-defined rules, patterns nor model-specific, manual hyperparameter tuning.

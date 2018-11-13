@@ -1,0 +1,41 @@
+\section{Related Work}
+\label{sec:relatedwork}
+Our approach combines multiple areas of research. We base our work on research in error detection, natural language processing, and active learning. First, we discuss existing research on state-of-the-art error detection. 
+Then, we compare our feature representation with representations that have been used in other error detection methods and make a general distinction to feature representations in natural language processing.
+Finally, we discuss existing work on active learning with a focus on data cleaning applications.
+
+\subsection{Error Detection}
+
+Error detection has received extensive attention in the information management community~\cite{abedjan2016detecting, chu2015katara, dallachiesa2013nadeef, pit2016outlier}. 
+Different error detection methods are typically tailored towards different types of data errors. 
+The two main categories of methods are quantitative or qualitative error detection~\cite{chu2016data}. 
+Abedjan et al. further identify four subcategories: rule violation detection, pattern violation detection, outlier detection, and duplicate conflict resolution~\cite{abedjan2016detecting}. 
+Rule-based detection methods, e.g., NADEEF~\cite{dallachiesa2013nadeef, khayyat2015bigdansing}, use data quality rules, such as functional dependencies or denial constraints~\cite{chu2013holistic}. 
+Pattern enforcement and transformation methods leverage syntactic ,e.g., OpenRefine~\cite{verborgh2013using} and Data Wrangler~\cite{kandel2012enterprise}, or semantic patterns ,e.g., KATARA~\cite{chu2015katara}, to uncover errors. 
+Outlier detection methods, such as dBoost~\cite{pit2016outlier}, consider values as errors if they deviate from the given norm.
+Moreover, record linkage and de-duplication methods, such as Data Tamer~\cite{stonebraker2013data}, find duplicate data records. For duplicates, conflicting values for the same attribute indicate errors.
+All these methods require the user to provide configuration parameters, whereas ED2 does not require any configuration.
+
+Recently, machine learning has been leveraged to improve data cleaning with respect to data repair~\cite{yakout2011guided,rekatsinas2017holoclean,yakout2013don,volkovs2014continuous}. However, in this paper, we focus on the error detection task and not the data repairing step. Accordingly, research on data repair considers error detection as a black box~\cite{rekatsinas2017holoclean}.
+
+
+
+\subsection{Feature Representation}
+
+
+Error detection methods leverage a broad variety of feature representations ranging from simple rules and patterns to sophisticated language models~\cite{pit2016outlier, melford-using-neural-networks-find-spreadsheet-errors}.
+Pit-Claudel et al. apply tuple expansion based on pre-defined patterns~\cite{pit2016outlier}. Simple transformation rules, such as extracting numbers from a string attribute, are initial steps to find errors in heterogeneous data. However, this approach works only if there is a rule for each error type. Therefore, this approach is viable only for a small number of error types.
+Singh et al. model text using an LSTM to find errors~\cite{melford-using-neural-networks-find-spreadsheet-errors}. However, they consider a cell erroneous only if it expects a formula but contains a number instead, whereas our approach can detect a wide range of error types.
+Krishnan et al.~\cite{krishnan2016activeclean} use the TF-IDF representation of data values to train a model that classifies whether a tuple is dirty or not. We show in our experiments that a character-level representation achieves higher accuracy than a word-level representation. In contrast to ActiveClean's tuple-wise classification~\cite{krishnan2016activeclean}, ED2 can identify the actual erroneous values inside the tuples. 
+In general, using language models, such as bag-of-words, n-grams~\cite{cavnar1994n}, and neural networks, is common for text classification~\cite{joachims1998text, mccallum1998comparison, radford2017learning, zhang2015character}.
+However, for the use case of error detection, we showed with an in-depth analysis that the language model can be advanced by other features, such as column concatenation, metadata, and error correlation features.
+
+\subsection{Active Learning}
+
+Active learning~\cite{settles2010active} has been intensively used in data cleaning algorithms, such as duplicate detection methods~\cite{firmani2016online, gokhale2014corleone, papenbrock2015progressive}, outlier detection methods for numerical data only~\cite{abe2006outlier, steinwart2005classification}, and data repair~\cite{krishnan2016activeclean,yakout2011guided}.
+However, only ED2 addresses the task of error detection for relational data with heterogeneous data types without user configuration. 
+
+Unlike its name suggests, ActiveClean does not apply active learning~\cite{krishnan2016activeclean}. ActiveClean assumes that the user trains an application-specific machine learning model on the dataset in question. Therefore, the user has to provide labels for the corresponding machine learning task for all tuples of the dataset. In contrast, ED2 is a stand-alone cell-wise error detection method with its own active learning strategy that does not require a use case.
+
+In general, we can interpret error detection as a text classification task~\cite{tong2001support}. However, in order to exploit the priors of relational data, we define it as a two-dimensional \emph{multi-classifier} active learning problem. This problem does not coincide with the two-dimensional \emph{multi-label} active learning problem~\cite{qi2008two}. To select the most beneficial column for labeling, we leverage heuristics that Bloodgood et al. and Zhu et al. proposed as stopping criteria~\cite{bloodgood2009method, zhu2007active}.
+
