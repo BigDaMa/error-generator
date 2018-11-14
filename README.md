@@ -37,6 +37,8 @@ this project has python interface that helps the user to run it over dataset for
 
 in the ``` user_interface.py ``` you can specify the method that has been explained above and the selector for selecting the columns and cells.
 
+For using the Error generator as part of your project please check [here](https://github.com/BigDaMa/error-generator/blob/master/Help.ipynb)
+
 # Example & test
 
 for using the methods of error generator is needed to make an instance of the methods and selectors and feed the error_generator with them.
