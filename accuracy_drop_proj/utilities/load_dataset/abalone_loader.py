@@ -11,7 +11,7 @@ class Abalone_loader(object):
     def load(self):
         column_names = ["sex", "length", "diameter", "height", "whole weight",
                         "shucked weight", "viscera weight", "shell weight", "rings"]
-        data = pd.read_csv("./datasets/abalone.data", names=column_names)
+        data = pd.read_csv("./datasets/abalone2.data", names=column_names)
         # print("Number of samples: %d" % len(data))
 
         # for more complicated cases use sklearn.feature_extraction.DictVectorizer

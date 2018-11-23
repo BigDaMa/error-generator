@@ -1,9 +1,11 @@
+import heapq
+import numpy as np
 from sklearn.feature_selection import SelectKBest, f_classif
 from sklearn.feature_selection import chi2
 from sklearn.ensemble import ExtraTreesClassifier
 from accuracy_drop_proj.strategies.change_combination.change_combination import Change_Combination
-import numpy as np
-class Change_Ranked_Feature_Informationgain(object):
+
+class Change_Uncertainty_Rankfeatures(object):
     def __init__(self):
         pass
 
@@ -17,7 +19,8 @@ class Change_Ranked_Feature_Informationgain(object):
         change_done = False
         x_train_changed = np.copy(x_train)
 
-        #find the order of the feature according to information gain
+        #---------------------find the order of the feature according to information gain-----------------------
+
         model = ExtraTreesClassifier()
         model.fit(x_train, y_train)
 
@@ -42,12 +45,42 @@ class Change_Ranked_Feature_Informationgain(object):
         all_subset = sorted(ranked_information_dic.items(), key=lambda item: len(item[0]) * 1000 - item[1], reverse=False)
 
 
+        #---------------------------finding the order of the row accordin to uncertainity-------------------------
 
-        #changing
+        probability = mnb.predict_proba(x_train)
+
+
+        uncertainty={}
+        for index,roww in enumerate(probability):
+            largest_val =heapq.nlargest(2, roww)
+            uncertainty.update({index:1-(np.abs(np.subtract(largest_val[0],largest_val[1])))})
+            largest_val=[]
+            # print(index,row,np.subtract(largest_val[0],largest_val[1]))
+
+        print(len(probability))
+        print(len(uncertainty))
+        #sort the uncertainty
+        uncertainty_sorted=sorted(uncertainty.items(), key=lambda x:x[1],reverse=True)
+
+
+        #---------------------------------------------changing--------------------------------------------
+
         for i in range(len(change_plan["key"])):
             occurred_change = 0
+            #sort the row according to uncertainty
 
-            indices = [t for t, x in enumerate(y_train) if x == change_plan["key"][i][0]]
+            indices=[]
+
+            for key_dic in uncertainty_sorted:
+                if y_train[key_dic[0]] == change_plan["key"][i][0]:
+                    indices.append(key_dic[0])
+
+
+
+            #this is normal indices
+            # indices_2 = [t for t, x in enumerate(y_train) if x == change_plan["key"][i][0]]
+
+
             print("{} rows have target {} \n".format(len(indices), change_plan["key"][i][0]))
 
             for p in range(len(indices)):
@@ -65,7 +98,6 @@ class Change_Ranked_Feature_Informationgain(object):
                             if (occurred_change == change_plan["number"][i]):
                                 #                         print("part of your request has been done :))))")
                                 break
-
 
                             print("try to change with change index {}".format(list(subset[0])))
                             x_train_changed[indices[p]][list(subset[0])] = 0
@@ -86,10 +118,57 @@ class Change_Ranked_Feature_Informationgain(object):
                             else:
                                 x_train_changed[indices[p]] = np.copy(x_train[indices[p]])
 
-
-
-
         if (all_changed <= number_change_requested):
             print("your request doesn't complete! please change your plan")
         return np.copy(x_train_changed)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
