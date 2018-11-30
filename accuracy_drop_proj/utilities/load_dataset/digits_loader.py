@@ -32,6 +32,9 @@ class Digits_Loader(object):
 
         y = np.asarray(yy, dtype=np.float32)
 
+        X=X[0:10]
+        y=y[0:10]
+
         x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=4)
 
         print("the Digits dataset has been loaded \n")

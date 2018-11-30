@@ -6,16 +6,18 @@ from sklearn.ensemble import ExtraTreesClassifier
 from accuracy_drop_proj.strategies.change_combination.change_combination import Change_Combination
 
 """
-this  method first sort the rows according to uncetainity and features according to information gain and then pick
-first rows that classifer is not sure about them and feature are more likely to change 
+this method according the user request find the difference of the probability for each class and then sort the rows according to them.
+for example if we have [0.1  0.6  0.3] and request of user be [0,1] we compute 0.5 for this row and sort the row Ascending
 """
-class Change_Uncertainty_Rankfeatures(object):
+
+class Change_ProbabilityDistance_RankFeature(object):
     def __init__(self):
         pass
 
     def change(self,x_train, y_train, percetage, mnb, change_plan):
         number_change_requested = int(percetage / 100 * x_train.shape[0])
         print("{} percentage error is equal to {} change \n".format(percetage, number_change_requested))
+
 
         used_row ={}
         occurred_change = 0
@@ -28,7 +30,7 @@ class Change_Uncertainty_Rankfeatures(object):
         model = ExtraTreesClassifier()
         model.fit(x_train, y_train)
 
-        print("combinatio of feature")
+        print("combination of feature")
 
         information_gain = {}
         for i in range(len(model.feature_importances_)):
@@ -52,49 +54,40 @@ class Change_Uncertainty_Rankfeatures(object):
         all_subset = sorted(ranked_information_dic.items(), key=lambda item: len(item[0]) * 1000 - item[1], reverse=False)
 
 
-        #---------------------------finding the order of the row according to uncertainity-------------------------
+
 
         probability = mnb.predict_proba(x_train)
+        probability_distance={}
 
-        print("finding uncertainity")
-
-        uncertainty={}
-        for index,roww in enumerate(probability):
-            largest_val =heapq.nlargest(2, roww)
-            uncertainty.update({index:1-(np.abs(np.subtract(largest_val[0],largest_val[1])))})
-            largest_val=[]
-            # print(index,row,np.subtract(largest_val[0],largest_val[1]))
-
-        print(len(probability))
-        print(len(uncertainty))
-        #sort the uncertainty
-        uncertainty_sorted=sorted(uncertainty.items(), key=lambda x:x[1],reverse=True)
-
-
-        print("changing")
-        #---------------------------------------------changing--------------------------------------------
+        #----------------------------------------------changing--------------------------------------------------
 
         for i in range(len(change_plan["key"])):
             occurred_change = 0
-            #sort the row according to uncertainty
 
+            indices = [t for t, x in enumerate(y_train) if x == change_plan["key"][i][0]]
+            # print(indices)
+            print("{} rows have target {} \n".format(len(indices), change_plan["key"][i][0]))
+
+            probability_distance.clear()
+            probability_distance_sorted=[]
+
+            # find the distance probability between the class that user need to change
+
+            for elements in indices:
+                probability_distance.update({elements:np.abs(probability[elements][change_plan["key"][i][0]]- probability[elements][change_plan["key"][i][1]])})
+            # ---------------------------finding the order of the row according to probability distance-------------------------
+            # sort the row according the distance probability
+
+            probability_distance_sorted = sorted(probability_distance.items(), key=lambda x: x[1], reverse=False)
             indices=[]
-
-            for key_dic in uncertainty_sorted:
-                if y_train[key_dic[0]] == change_plan["key"][i][0]:
-                    indices.append(key_dic[0])
+            for j in probability_distance_sorted:
+                indices.append(j[0])
 
             print(indices)
 
-
-            #this is normal indices
-            # indices_2 = [t for t, x in enumerate(y_train) if x == change_plan["key"][i][0]]
-
-
-            print("{} rows have target {} \n".format(len(indices), change_plan["key"][i][0]))
-
+            print("try in indices")
             for p in range(len(indices)):
-                print("try in indices")
+
                 if (all_changed == number_change_requested + 1):
                     print("your requests have been done :)")
                     break
@@ -110,8 +103,33 @@ class Change_Uncertainty_Rankfeatures(object):
                                 #                         print("part of your request has been done :))))")
                                 break
 
-                            print("try to change, with change index {} on row {}".format(list(subset[0]),indices[p]))
-                            x_train_changed[indices[p]][list(subset[0])] = 0
+                            print("try to change, with changing index {} on row {}".format(list(subset[0]),indices[p]))
+
+                            #######################################################
+                            # impose Outlier insted of 0
+
+                            mean = np.max(x_train[:,list(subset[0])])
+                            std = np.std(x_train[:,list(subset[0])])
+                            maximum = np.max(x_train[:, list(subset[0])])
+
+                            # threshold = mean + 2 * std
+                            # outlier = x_train[:,list(subset[0])][x_train[:,list(subset[0])]>threshold]
+                            #
+                            # if len(outlier):
+                            #     x_train_changed[indices[p]][list(subset[0])] = outlier[0]
+                            #
+                            # else:
+                            #     x_train_changed[indices[p]][list(subset[0])] = threshold +1
+
+
+                            #impose of Avg the column insted of the 0
+
+                            x_train_changed[indices[p]][list(subset[0])] = maximum +0.1*maximum
+
+
+
+                            ########################################################
+                            # x_train_changed[indices[p]][list(subset[0])] = 0
 
                             if (change_plan["key"][i][1] == mnb.predict([x_train_changed[indices[p]]])[0]):
 
@@ -132,54 +150,3 @@ class Change_Uncertainty_Rankfeatures(object):
         if (all_changed <= number_change_requested):
             print("your request doesn't complete! please change your plan")
         return np.copy(x_train_changed)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
