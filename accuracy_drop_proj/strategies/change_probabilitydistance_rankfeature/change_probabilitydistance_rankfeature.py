@@ -108,10 +108,10 @@ class Change_ProbabilityDistance_RankFeature(object):
                             #######################################################
                             # impose Outlier insted of 0
 
-                            mean = np.max(x_train[:,list(subset[0])])
-                            std = np.std(x_train[:,list(subset[0])])
-                            maximum = np.max(x_train[:, list(subset[0])])
-
+                            # mean = np.mean(x_train[:,list(subset[0])])
+                            # std = np.std(x_train[:,list(subset[0])])
+                            # maximum = np.max(x_train[:, list(subset[0])])
+                            #
                             # threshold = mean + 2 * std
                             # outlier = x_train[:,list(subset[0])][x_train[:,list(subset[0])]>threshold]
                             #
@@ -122,14 +122,26 @@ class Change_ProbabilityDistance_RankFeature(object):
                             #     x_train_changed[indices[p]][list(subset[0])] = threshold +1
 
 
-                            #impose of Avg the column insted of the 0
+                            #impose of outlier the column insted of the 0
+                            # x_train_changed[indices[p]][list(subset[0])] = maximum +0.1*maximum
 
-                            x_train_changed[indices[p]][list(subset[0])] = maximum +0.1*maximum
 
+                            #find index of values that belongs to new target
+                            # indices_2 = [t for t, x in enumerate(y_train) if x == change_plan["key"][i][1]]
+
+
+
+
+                            #---------- put avg rows that belongs to new target for this specific columns
+                            # print(np.mean(x_train[indices_2,list(subset[0])[0]]))
+                            # x_train_changed[indices[p]][list(subset[0])] = np.mean(x_train[indices_2,list(subset[0])[0]])
+
+                            #----------- put the first value that match to new target
+                            # x_train_changed[indices[p]][list(subset[0])] = x_train_changed[indices_2[0]][list(subset[0])]
 
 
                             ########################################################
-                            # x_train_changed[indices[p]][list(subset[0])] = 0
+                            x_train_changed[indices[p]][list(subset[0])] = 0
 
                             if (change_plan["key"][i][1] == mnb.predict([x_train_changed[indices[p]]])[0]):
 

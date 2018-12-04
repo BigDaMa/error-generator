@@ -109,6 +109,9 @@ class Change_Uncertainty_Rankfeatures(object):
                             if (occurred_change == change_plan["number"][i]):
                                 #                         print("part of your request has been done :))))")
                                 break
+                            if len(list(subset[0]))>5:
+                                print("max number of the operations")
+                                break
 
                             print("try to change, with change index {} on row {}".format(list(subset[0]),indices[p]))
                             x_train_changed[indices[p]][list(subset[0])] = 0

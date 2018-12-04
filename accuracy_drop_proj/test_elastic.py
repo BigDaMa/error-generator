@@ -100,15 +100,16 @@ x_train, x_test, y_train, y_test = loader.load()
 # print(len(new_train))
 # print(new_train)
 
-mean = np.mean(x_train[:,[0,1,2,3]])
+# mean = np.mean(x_train[:,[0,1,2,3]])
+#
+# print(mean)
+# print("lllll")
+# sd = np.std(x_train[:,1])
+#
+# for x in x_train[:,1]:
+#     if x > (mean + 2 * sd):
+#         print(x)
 
-print(mean)
-print("lllll")
-sd = np.std(x_train[:,1])
-
-for x in x_train[:,1]:
-    if x > (mean + 2 * sd):
-        print(x)
 
 
 
@@ -127,3 +128,9 @@ for x in x_train[:,1]:
 # final_list2 = [x for x in final_list if (x < mean + 2 * sd)]
 # print(final_list)
 # print(final_list2)
+x=[]
+for i in range(6):
+    for j in range(6):
+        if i and j != 0 and i !=j:
+            x.append([i,j])
+print(x)
