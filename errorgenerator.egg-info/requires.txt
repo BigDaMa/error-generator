@@ -1,0 +1,3 @@
+chainer
+numpy
+pandas

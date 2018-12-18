@@ -103,6 +103,13 @@ class Change_ProbabilityDistance_RankFeature(object):
                                 #                         print("part of your request has been done :))))")
                                 break
 
+
+
+
+                            if len(list(subset[0]))>5:
+                                print("max number of the operations")
+                                break
+
                             print("try to change, with changing index {} on row {}".format(list(subset[0]),indices[p]))
 
                             #######################################################

@@ -34,32 +34,45 @@ class Change_Combination_Feature_Min(object):
                         if (occurred_change == change_plan["number"][i]):
                             #                         print("part of your request has been done :))))")
                             break
-                        print("change feature {} ----".format(subset))
-                        for p in range(len(indices)):
-                            x_train_changed[indices[p]][subset] = 0
+                        print("change feature with index {} ----".format(subset))
 
-                            if y_train[indices[p]] == mnb.predict([x_train[indices[p]]]) and indices[p] not in used_row:
-
-                                if (change_plan["key"][i][1] == mnb.predict([x_train_changed[indices[p]]])[0]):
-
-                                    print("with change features number {} row number {} has been changed".format(subset,
-                                                                                                                 indices[
-                                                                                                                     p]))
-                                    print(x_train[indices[p]], mnb.predict([x_train[indices[p]]])[0])
-                                    print(x_train_changed[indices[p]], mnb.predict([x_train_changed[indices[p]]])[0])
-
-                                    print(" \n change number {} \n".format(all_changed))
-                                    used_row.update({indices[p]:indices[p]})
-                                    occurred_change = occurred_change + 1
-                                    all_changed = all_changed + 1
-
-                                    if (occurred_change == change_plan["number"][i]):
-                                        print("part of your request has been done :)")
+                        for p in indices:
+                            if y_train[p] == mnb.predict([x_train[p]]) and p not in used_row:
+                                change_done = False
+                                for L in range(0, len(x_train_changed[p]) + 1):
+                                    if change_done:
                                         break
-                                else:
-                                    x_train_changed[indices[p]] = np.copy(x_train[indices[p]])
-                            else:
-                                x_train_changed[indices[p]] = np.copy(x_train[indices[p]])
+                                    else:
+                                        for subset in Change_Combination.combinations_index(self,x_train_changed[p],L):
+                                            if not subset:
+                                                pass
+                                            else:
+                                                if (occurred_change == change_plan["number"][i]):
+                                                    # print("part of your request has been done lllllllllllllll:)")
+                                                    break
+
+                                                x_train_changed[p][subset] = 0
+
+                                                if (change_plan["key"][i][1] == mnb.predict([x_train_changed[p]])[0]):
+
+                                                    change_done = True
+                                                    print("with change features index number {} row number {} has been changed".format(subset,p))
+                                                    print(x_train[p], mnb.predict([x_train[p]])[0])
+                                                    print(x_train_changed[p], mnb.predict([x_train_changed[p]])[0])
+
+                                                    print(" \n change number {} \n".format(all_changed))
+                                                    used_row.update({p:p})
+                                                    occurred_change = occurred_change + 1
+                                                    all_changed = all_changed + 1
+
+                                                    break
+                                                else:
+                                                    x_train_changed[p] = np.copy(x_train[p])
+
+
+                                            if (occurred_change == change_plan["number"][i]):
+                                                # print("part of your request has been done :)")
+                                                break
 
         if (all_changed <= number_change_requested):
             print("your request doesn't complete! please change your plan")
