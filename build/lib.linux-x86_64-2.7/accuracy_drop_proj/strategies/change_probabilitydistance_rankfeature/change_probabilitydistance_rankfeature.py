@@ -38,7 +38,7 @@ class Change_ProbabilityDistance_RankFeature(object):
 
         ranked_information_dic = {}
         sum_gain = 0
-        for L in range(0,x_train.shape[1] + 1):
+        for L in range(0,x_train.shape[1] + 1-20):
             for subset in Change_Combination.combinations_index(self,information_gain.keys(), L):
                 if not subset:
                     pass
@@ -101,6 +101,13 @@ class Change_ProbabilityDistance_RankFeature(object):
 
                             if (occurred_change == change_plan["number"][i]):
                                 #                         print("part of your request has been done :))))")
+                                break
+
+
+
+
+                            if len(list(subset[0]))>5:
+                                print("max number of the operations")
                                 break
 
                             print("try to change, with changing index {} on row {}".format(list(subset[0]),indices[p]))

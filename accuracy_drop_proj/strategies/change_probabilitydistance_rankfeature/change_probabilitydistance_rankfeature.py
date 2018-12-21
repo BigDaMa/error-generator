@@ -38,7 +38,7 @@ class Change_ProbabilityDistance_RankFeature(object):
 
         ranked_information_dic = {}
         sum_gain = 0
-        for L in range(0,x_train.shape[1] + 1):
+        for L in range(0,x_train.shape[1] + 1 -94):
             for subset in Change_Combination.combinations_index(self,information_gain.keys(), L):
                 if not subset:
                     pass

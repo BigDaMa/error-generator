@@ -64,9 +64,8 @@ print('Accuracy of tree classifier on test set: {:.2f}'.format(accuracy_score(y_
 # mymethod =Change_Combination_Min()     #Alg1
 # mymethod=Change_Combination_Feature_Min() #Alg2
 # mymethod = Change_Ranked_Feature_Informationgain()
-mymethod = Change_Uncertainty_Rankfeatures() #Alg3
-# mymeMahdi1234
-# thod = Change_ProbabilityDistance_RankFeature() #Alg4
+# mymethod = Change_Uncertainty_Rankfeatures() #Alg3
+mymethod = Change_ProbabilityDistance_RankFeature() #Alg4
 
 
 #-------------------------- change plan ---------------------------------------------

@@ -33,7 +33,7 @@ class Change_Combination_Min(object):#base rows
 
                 if y_train[indices[p]] == mnb.predict([x_train[indices[p]]]) and indices[p] not in used_row:
                     change_done = False
-                    for L in range(0, len(x_train_changed[indices[p]]) + 1):
+                    for L in range(0, len(x_train_changed[indices[p]]) + 1 ):
                         if change_done:
                             break
                         else:
