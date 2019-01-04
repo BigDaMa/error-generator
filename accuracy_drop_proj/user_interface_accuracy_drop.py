@@ -48,11 +48,18 @@ print(x_test.shape)
 
 #--------------------- Tree -----------------------------------------
 
-model=tree.DecisionTreeClassifier()
+model=tree.DecisionTreeClassifier(random_state= 4)
 print("train tree")
 model.fit(x_train,y_train)
 y_pred = model.predict(x_test)
 print('Accuracy of tree classifier on test set: {:.2f}'.format(accuracy_score(y_test,y_pred)))
+
+# ---------------------KNN ---------------------------------------
+# from sklearn.naive_bayes import GaussianNB
+# model= GaussianNB()
+# model.fit(x_train,y_train)
+# y_pred = model.predict(x_test)
+# print('Accuracy of tree classifier on test set: {:.2f}'.format(accuracy_score(y_test,y_pred)))
 
 #--------------------choose your method--------------------------------------------
 
@@ -64,8 +71,8 @@ print('Accuracy of tree classifier on test set: {:.2f}'.format(accuracy_score(y_
 # mymethod =Change_Combination_Min()     #Alg1
 # mymethod=Change_Combination_Feature_Min() #Alg2
 # mymethod = Change_Ranked_Feature_Informationgain()
-# mymethod = Change_Uncertainty_Rankfeatures() #Alg3
-mymethod = Change_ProbabilityDistance_RankFeature() #Alg4
+mymethod = Change_Uncertainty_Rankfeatures() #Alg3
+# mymethod = Change_ProbabilityDistance_RankFeature() #Alg4
 
 
 #-------------------------- change plan ---------------------------------------------
@@ -76,7 +83,7 @@ start = time.time()
 
 
 
-change_plan={"key":[[4,2]],"number":[25]}
+change_plan={"key":[[4,2],[4,3]],"number":[10,15]}
 
 
 # change_plan={"key":[[0,1],[2,1]],"number":[10,10]}

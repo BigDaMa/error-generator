@@ -8,6 +8,7 @@ from accuracy_drop_proj.strategies.change_combination.change_combination import 
 """
 this  method first sort the rows according to uncetainity and features according to information gain and then pick
 first rows that classifer is not sure about them and feature are more likely to change 
+algorithm 3
 """
 class Change_Uncertainty_Rankfeatures(object):
     def __init__(self):
@@ -55,6 +56,7 @@ class Change_Uncertainty_Rankfeatures(object):
         #---------------------------finding the order of the row according to uncertainity-------------------------
 
         probability = mnb.predict_proba(x_train)
+        print(probability)
 
         print("finding uncertainity")
 
@@ -65,11 +67,10 @@ class Change_Uncertainty_Rankfeatures(object):
             largest_val=[]
             # print(index,row,np.subtract(largest_val[0],largest_val[1]))
 
-        print(len(probability))
-        print(len(uncertainty))
+
         #sort the uncertainty
         uncertainty_sorted=sorted(uncertainty.items(), key=lambda x:x[1],reverse=True)
-
+        print(uncertainty_sorted)
 
         print("changing")
         #---------------------------------------------changing--------------------------------------------
@@ -92,13 +93,15 @@ class Change_Uncertainty_Rankfeatures(object):
 
 
             print("{} rows have target {} \n".format(len(indices), change_plan["key"][i][0]))
-
+            print("try in indices")
             for p in range(len(indices)):
-                print("try in indices")
+
                 if (all_changed == number_change_requested + 1):
                     print("your requests have been done :)")
                     break
                 if y_train[indices[p]] == mnb.predict([x_train[indices[p]]]) and indices[p] not in used_row:
+                    print(indices[p])
+
 
                     change_done = False
                     for subset in all_subset:
@@ -107,10 +110,7 @@ class Change_Uncertainty_Rankfeatures(object):
                         else:
 
                             if (occurred_change == change_plan["number"][i]):
-                                #                         print("part of your request has been done :))))")
-                                break
-                            if len(list(subset[0]))>5:
-                                print("max number of the operations")
+                                #print("part of your request has been done :))))")
                                 break
 
                             print("try to change, with change index {} on row {}".format(list(subset[0]),indices[p]))
@@ -119,15 +119,15 @@ class Change_Uncertainty_Rankfeatures(object):
                             if (change_plan["key"][i][1] == mnb.predict([x_train_changed[indices[p]]])[0]):
 
                                 print(x_train[indices[p]], mnb.predict([x_train[indices[p]]])[0])
-                                print(x_train_changed[indices[p]],
-                                      mnb.predict([x_train_changed[indices[p]]])[0])
-                                print(" \n change number {} \n".format(all_changed))
+                                print(x_train_changed[indices[p]],mnb.predict([x_train_changed[indices[p]]])[0])
+                                print(" \n change number {} on row {} \n".format(all_changed,indices[p]))
+
 
                                 used_row.update({indices[p]: indices[p]})
                                 occurred_change = occurred_change + 1
                                 change_done = True
                                 all_changed = all_changed + 1
-                                break
+                                # break
 
                             else:
                                 x_train_changed[indices[p]] = np.copy(x_train[indices[p]])

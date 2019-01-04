@@ -17,22 +17,24 @@ class Change_Combination_Min(object):#base rows
 
         used_row={}
         occurred_change = 0
+        possible_changes_counter = 0
         all_changed = 1
         change_done = False
         x_train_changed = np.copy(x_train)
         possible_changes = {}  # key: number of changes and  value:[row,[columns should change]]
 
         for i in range(len(change_plan["key"])):
-
+            possible_changes_counter = 0
             occurred_change = 0
             indices = [t for t, x in enumerate(y_train) if x == change_plan["key"][i][0]]
             possible_changes = {x: [] for x in range(len(x_train[0]) + 1)}
             print("{} rows have target {} \n".format(len(indices), change_plan["key"][i][0]))
-
+            print(indices)
             for p in range(len(indices)):
 
                 if y_train[indices[p]] == mnb.predict([x_train[indices[p]]]) and indices[p] not in used_row:
                     change_done = False
+
                     for L in range(0, len(x_train_changed[indices[p]]) + 1 ):
                         if change_done:
                             break
@@ -41,16 +43,22 @@ class Change_Combination_Min(object):#base rows
                                 if not subset:
                                     pass
                                 else:
-
+                                    print('subset is {} and row is {}'.format(subset,indices[p]))
                                     x_train_changed[indices[p]][subset] = 0
-
-                                    if (change_plan["key"][i][1] == mnb.predict([x_train_changed[indices[p]]])[0]):
-                                        possible_changes[len(subset)].append([indices[p], subset])
-                                        change_done = True
-                                        x_train_changed[indices[p]] = np.copy(x_train[indices[p]])
+                                    if (possible_changes_counter == change_plan["number"][i]):
+                                        # print("the requested number of change have been found")
                                         break
                                     else:
-                                        x_train_changed[indices[p]] = np.copy(x_train[indices[p]])
+
+                                        if (change_plan["key"][i][1] == mnb.predict([x_train_changed[indices[p]]])[0]):
+                                            possible_changes[len(subset)].append([indices[p], subset])
+                                            change_done = True
+                                            x_train_changed[indices[p]] = np.copy(x_train[indices[p]])
+                                            possible_changes_counter=possible_changes_counter+1
+                                            print('Found')
+                                            break
+                                        else:
+                                            x_train_changed[indices[p]] = np.copy(x_train[indices[p]])
 
             if (all(value == [] for value in possible_changes.values())):
                 print("part of your request not possible!")
@@ -59,8 +67,7 @@ class Change_Combination_Min(object):#base rows
             for key in sorted(possible_changes):
                 if (occurred_change == change_plan["number"][i]):
                     break
-                print("there are {} candidate for changing target with change {} features".format(
-                    len(possible_changes[key]), key))
+                print("there are {} candidate for changing target with change {} features".format(len(possible_changes[key]), key))
                 variable = possible_changes[key]
                 for t in range(len(variable)):
 
@@ -68,7 +75,7 @@ class Change_Combination_Min(object):#base rows
 
                     x_train_changed[variable[t][0]][variable[t][1]] = 0
                     print(x_train_changed[variable[t][0]], mnb.predict([x_train_changed[variable[t][0]]])[0])
-                    print(" \n change number {} \n".format(all_changed))
+                    print(" \n change number {} on row {} \n".format(all_changed,variable[t][0]))
                     used_row.update({variable[t][0]:variable[t][0]})
                     occurred_change = occurred_change + 1
                     all_changed = all_changed + 1
