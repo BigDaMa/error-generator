@@ -43,7 +43,7 @@ class Change_Combination_Min(object):#base rows
                                 if not subset:
                                     pass
                                 else:
-                                    print('subset is {} and row is {}'.format(subset,indices[p]))
+                                    #print('subset is {} and row is {}'.format(subset,indices[p]))
                                     x_train_changed[indices[p]][subset] = 0
                                     if (possible_changes_counter == change_plan["number"][i]):
                                         # print("the requested number of change have been found")
@@ -55,7 +55,7 @@ class Change_Combination_Min(object):#base rows
                                             change_done = True
                                             x_train_changed[indices[p]] = np.copy(x_train[indices[p]])
                                             possible_changes_counter=possible_changes_counter+1
-                                            print('Found')
+                                            #print('Found')
                                             break
                                         else:
                                             x_train_changed[indices[p]] = np.copy(x_train[indices[p]])

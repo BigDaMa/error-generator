@@ -8,6 +8,7 @@ from accuracy_drop_proj.strategies.change_combination.change_combination import 
 """
 this method according the user request find the difference of the probability for each class and then sort the rows according to them.
 for example if we have [0.1  0.6  0.3] and request of user be [0,1] we compute 0.5 for this row and sort the row Ascending
+Alg4
 """
 
 class Change_ProbabilityDistance_RankFeature(object):
@@ -15,6 +16,8 @@ class Change_ProbabilityDistance_RankFeature(object):
         pass
 
     def change(self,x_train, y_train, percetage, mnb, change_plan):
+
+
         number_change_requested = int(percetage / 100 * x_train.shape[0])
         print("{} percentage error is equal to {} change \n".format(percetage, number_change_requested))
 
@@ -38,7 +41,7 @@ class Change_ProbabilityDistance_RankFeature(object):
 
         ranked_information_dic = {}
         sum_gain = 0
-        for L in range(0,x_train.shape[1] + 1 -94):
+        for L in range(0,x_train.shape[1] + 1):
             for subset in Change_Combination.combinations_index(self,information_gain.keys(), L):
                 if not subset:
                     pass
@@ -57,6 +60,7 @@ class Change_ProbabilityDistance_RankFeature(object):
 
 
         probability = mnb.predict_proba(x_train)
+        #print(probability)
         probability_distance={}
 
         #----------------------------------------------changing--------------------------------------------------
@@ -65,7 +69,7 @@ class Change_ProbabilityDistance_RankFeature(object):
             occurred_change = 0
 
             indices = [t for t, x in enumerate(y_train) if x == change_plan["key"][i][0]]
-            # print(indices)
+            #print(indices)
             print("{} rows have target {} \n".format(len(indices), change_plan["key"][i][0]))
 
             probability_distance.clear()
@@ -74,7 +78,7 @@ class Change_ProbabilityDistance_RankFeature(object):
             # find the distance probability between the class that user need to change
 
             for elements in indices:
-                probability_distance.update({elements:np.abs(probability[elements][change_plan["key"][i][0]]- probability[elements][change_plan["key"][i][1]])})
+                probability_distance.update({elements:np.abs(probability[elements][change_plan["key"][i][0]-1]- probability[elements][change_plan["key"][i][1]-1])})
             # ---------------------------finding the order of the row according to probability distance-------------------------
             # sort the row according the distance probability
 
@@ -83,7 +87,7 @@ class Change_ProbabilityDistance_RankFeature(object):
             for j in probability_distance_sorted:
                 indices.append(j[0])
 
-            print(indices)
+            #print(indices)
 
             print("try in indices")
             for p in range(len(indices)):
@@ -100,15 +104,15 @@ class Change_ProbabilityDistance_RankFeature(object):
                         else:
 
                             if (occurred_change == change_plan["number"][i]):
-                                #                         print("part of your request has been done :))))")
+                                #print("part of your request has been done :))))")
                                 break
 
 
 
-
-                            if len(list(subset[0]))>5:
-                                print("max number of the operations")
-                                break
+                            #
+                            # if len(list(subset[0]))>5:
+                            #     print("max number of the operations")
+                            #     break
 
                             print("try to change, with changing index {} on row {}".format(list(subset[0]),indices[p]))
 
@@ -153,15 +157,14 @@ class Change_ProbabilityDistance_RankFeature(object):
                             if (change_plan["key"][i][1] == mnb.predict([x_train_changed[indices[p]]])[0]):
 
                                 print(x_train[indices[p]], mnb.predict([x_train[indices[p]]])[0])
-                                print(x_train_changed[indices[p]],
-                                      mnb.predict([x_train_changed[indices[p]]])[0])
-                                print(" \n change number {} \n".format(all_changed))
+                                print(x_train_changed[indices[p]],mnb.predict([x_train_changed[indices[p]]])[0])
+                                print(" \n change number {} on row {} \n".format(all_changed, indices[p]))
 
                                 used_row.update({indices[p]: indices[p]})
                                 occurred_change = occurred_change + 1
                                 change_done = True
                                 all_changed = all_changed + 1
-                                break
+                                #break
 
                             else:
                                 x_train_changed[indices[p]] = np.copy(x_train[indices[p]])

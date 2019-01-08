@@ -17,7 +17,7 @@ class EEG_Loader(object):
         data = data.drop(['Unnamed: 0'], axis=1)
 
         del data["y"]  # remove rings from data, so we can convert all the dataframe to a numpy 2D array.
-        data2=data.iloc[:, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]]
+        data2=data.iloc[:, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9,10, 11, 12, 13, 14, 15, 16, 17, 18, 19,20, 21, 22, 23, 24, 25, 26, 27, 28, 29]]
         X = data2.values.astype(np.float)
 
 

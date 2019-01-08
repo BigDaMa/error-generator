@@ -48,11 +48,11 @@ print(x_test.shape)
 
 #--------------------- Tree -----------------------------------------
 
-model=tree.DecisionTreeClassifier(random_state= 4)
-print("train tree")
-model.fit(x_train,y_train)
-y_pred = model.predict(x_test)
-print('Accuracy of tree classifier on test set: {:.2f}'.format(accuracy_score(y_test,y_pred)))
+# model=tree.DecisionTreeClassifier(random_state= 4)
+# print("train tree")
+# model.fit(x_train,y_train)
+# y_pred = model.predict(x_test)
+# print('Accuracy of tree classifier on test set: {:.2f}'.format(accuracy_score(y_test,y_pred)))
 
 # ---------------------KNN ---------------------------------------
 # from sklearn.naive_bayes import GaussianNB
@@ -60,6 +60,13 @@ print('Accuracy of tree classifier on test set: {:.2f}'.format(accuracy_score(y_
 # model.fit(x_train,y_train)
 # y_pred = model.predict(x_test)
 # print('Accuracy of tree classifier on test set: {:.2f}'.format(accuracy_score(y_test,y_pred)))
+#-----------------------------------------------------------------------------
+from sklearn.linear_model import LogisticRegression
+
+model= LogisticRegression(C=1e5, solver='lbfgs', multi_class='multinomial')
+
+model.fit(x_train, y_train)
+print('Accuracy of regresiion classifier on test set: {:.2f}'.format(model.score(x_test, y_test)))
 
 #--------------------choose your method--------------------------------------------
 
@@ -83,7 +90,7 @@ start = time.time()
 
 
 
-change_plan={"key":[[4,2],[4,3]],"number":[10,15]}
+change_plan={"key":[[4,2],[3,5]],"number":[22,3]}
 
 
 # change_plan={"key":[[0,1],[2,1]],"number":[10,10]}
