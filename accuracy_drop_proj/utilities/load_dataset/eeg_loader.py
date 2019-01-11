@@ -17,11 +17,11 @@ class EEG_Loader(object):
         data = data.drop(['Unnamed: 0'], axis=1)
 
         del data["y"]  # remove rings from data, so we can convert all the dataframe to a numpy 2D array.
-        data2=data.iloc[:, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9,10, 11, 12, 13, 14, 15, 16, 17, 18, 19,20, 21, 22, 23, 24, 25, 26, 27, 28, 29]]
+        data2=data.iloc[:, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]]
         X = data2.values.astype(np.float)
 
 
-        x_train, x_test, y_train, y_test = train_test_split(X, y, test_size= 0.043478260869565216 , random_state=4)
+        x_train, x_test, y_train, y_test = train_test_split(X, y, test_size= 0.086956522 , random_state=4)
 
         print(x_test.shape)
 

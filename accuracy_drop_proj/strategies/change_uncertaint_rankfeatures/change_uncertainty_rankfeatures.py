@@ -35,6 +35,7 @@ class Change_Uncertainty_Rankfeatures(object):
         for i in range(len(model.feature_importances_)):
             information_gain.update({i: model.feature_importances_[i]})
 
+        print(information_gain)
         ranked_information_dic = {}
         sum_gain = 0
         for L in range(0,x_train.shape[1] + 1 ):
@@ -42,7 +43,7 @@ class Change_Uncertainty_Rankfeatures(object):
                 if not subset:
                     pass
                 else:
-
+                    print(subset)
                     for key in subset:
                         sum_gain = sum_gain + information_gain.get(key)
                     ranked_information_dic.update({tuple(subset): sum_gain})
@@ -51,7 +52,7 @@ class Change_Uncertainty_Rankfeatures(object):
         print("create all subset")
 
         all_subset = sorted(ranked_information_dic.items(), key=lambda item: len(item[0]) * 1000 - item[1], reverse=False)
-
+        print(all_subset)
 
         #---------------------------finding the order of the row according to uncertainity-------------------------
 

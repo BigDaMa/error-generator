@@ -61,10 +61,9 @@ print(x_test.shape)
 # y_pred = model.predict(x_test)
 # print('Accuracy of tree classifier on test set: {:.2f}'.format(accuracy_score(y_test,y_pred)))
 #-----------------------------------------------------------------------------
+print("train LogisticRegression")
 from sklearn.linear_model import LogisticRegression
-
 model= LogisticRegression(C=1e5, solver='lbfgs', multi_class='multinomial')
-
 model.fit(x_train, y_train)
 print('Accuracy of regresiion classifier on test set: {:.2f}'.format(model.score(x_test, y_test)))
 
@@ -78,8 +77,8 @@ print('Accuracy of regresiion classifier on test set: {:.2f}'.format(model.score
 # mymethod =Change_Combination_Min()     #Alg1
 # mymethod=Change_Combination_Feature_Min() #Alg2
 # mymethod = Change_Ranked_Feature_Informationgain()
-mymethod = Change_Uncertainty_Rankfeatures() #Alg3
-# mymethod = Change_ProbabilityDistance_RankFeature() #Alg4
+# mymethod = Change_Uncertainty_Rankfeatures() #Alg3
+mymethod = Change_ProbabilityDistance_RankFeature() #Alg4
 
 
 #-------------------------- change plan ---------------------------------------------
@@ -90,7 +89,7 @@ start = time.time()
 
 
 
-change_plan={"key":[[4,2],[3,5]],"number":[22,3]}
+change_plan={"key":[[4,2],[3,5]],"number":[40,10]}
 
 
 # change_plan={"key":[[0,1],[2,1]],"number":[10,10]}
