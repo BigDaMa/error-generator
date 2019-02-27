@@ -20,7 +20,12 @@ from sklearn.metrics import f1_score
 from sklearn.metrics import accuracy_score
 import time
 from sklearn import tree
+'''
+Milad Abbaszadeh
+Milad.abbaszadeh94@gmail.com
+Bigdama Group Technical university of Berlin
 
+'''
 #---------------------- load data set -----------------------
 # loader=Iris_Loader()
 # loader=Abalone_loader()
