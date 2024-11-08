@@ -16,7 +16,8 @@ class Read_Write():
                                                 keep_default_na=False, low_memory=False)
 
             dataset_dataframe = dataset_dataframe.apply(lambda x: x.str.strip())
-            return [dataset_dataframe.columns.get_values().tolist()] + dataset_dataframe.get_values().tolist(),dataset_dataframe_version
+            return [dataset_dataframe.columns.to_list()] + dataset_dataframe.to_numpy().tolist(), dataset_dataframe_version
+
         else:
             dataset_dataframe = pandas.read_csv(dataset_path, sep=",", header=None, encoding="utf-8", dtype=str,
                                                 keep_default_na=False)
